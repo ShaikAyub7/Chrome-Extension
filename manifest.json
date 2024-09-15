@@ -1,0 +1,33 @@
+{
+  "name": "My Extension",
+  "description": "My first extension",
+  "version": "1.1",
+  "manifest_version": 3,
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "images/box.png",
+    "48": "images/box.png",
+    "128": "images/box.png"
+  }
+}

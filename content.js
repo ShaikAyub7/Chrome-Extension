@@ -1,3 +1,6 @@
+console.log('hello');
+
+
 document.addEventListener("DOMContentLoaded", () => {
   let today = new Date().toDateString(); // Get today's date
   const urlList = document.getElementById("tabUrls");
@@ -12,11 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const seconds = Math.floor(runtime / 1000) % 60;
       const minutes = Math.floor(runtime / (1000 * 60)) % 60;
       const hours = Math.floor(runtime / (1000 * 60 * 60));
-
+const hello  = 'hello'
       const html = `
-        <b>${domain}</b> - Time Spent: ${hours}h ${minutes}m ${seconds}s
+        <li><b>${domain}</b> - Time Spent: ${hours}h ${minutes}m ${seconds}s ${hello}</li>
       `;
-      urlList.insertAdjacentElement("afterbegin", html);
+      urlList.insertAdjacentHTML("afterbegin", html); // Use insertAdjacentHTML for raw HTML
     }
   });
 });

@@ -4,9 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const datePicker = document.getElementById("datePicker");
   const showDataBtn = document.getElementById("showData");
   const previous = document.getElementById("showYesterday");
+  const dateContainer = document.querySelector(".date-container");
+  const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
 
   let chartInstance = null;
-
   const today = new Date().toISOString().split("T")[0];
   datePicker.value = today;
   const yesterday = new Date(
@@ -14,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ).toDateString();
 
   const renderData = (selectedDate, dateLabel) => {
+    let totalRuntime = 0;
     selectedDateElement.innerText = `Data of: ${dateLabel}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
@@ -31,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
+        totalRuntime += runtime;
 
         const seconds = Math.floor(runtime / 1000) % 60;
         const minutes = Math.floor(runtime / (1000 * 60)) % 60;
@@ -42,8 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="time-container">
         <p class='time'>Time Spent: ${hours}h ${minutes}m ${seconds}s</p>
+
         </div>`;
         urlList.insertAdjacentHTML("afterbegin", listItem);
+        const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
+        const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
+        const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
+
+        totalTimeDisplay.textContent = `Total time spent: ${totalHours} hours, ${totalMinutes} minutes, ${totalSeconds} seconds`;
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));

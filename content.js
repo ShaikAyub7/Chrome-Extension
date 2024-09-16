@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const listItem = `
         <div class="tab-urls">
-
         <li>${domain}</li> 
         </div>
         <div class="time-container">

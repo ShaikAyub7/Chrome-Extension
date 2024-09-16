@@ -53,6 +53,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (chartInstance) {
         chartInstance.destroy();
       }
+
+      const uniqueColors = [
+        "#FF6384",
+        "#36A2EB", // Blue
+        "#FFCE56", // Yellow
+        "#4BC0C0", // Green
+        "#9966FF", // Purple
+        "#FF9F40", // Orange
+        "#C9CBCF", // Grey
+        "#8A2BE2", // BlueViolet
+        "#00FA9A", // MediumSpringGreen
+        "#FFD700", // Gold
+      ];
+      const backgroundColors = chartLabels.map(
+        (_, index) => uniqueColors[index % uniqueColors.length]
+      );
+
       chartInstance = new Chart(ctx, {
         type: "pie",
         data: {
@@ -61,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             {
               label: "Time Spent (minutes)",
               data: chartData,
+              backgroundColor: backgroundColors,
               borderWidth: 1,
             },
           ],
@@ -94,9 +112,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayLabel = new Date().toDateString();
   renderData(todayLabel, "Today");
 
-  showDataBtn.addEventListener("click", () => {
+  showDataBtn.addEventListener("click", (e) => {
     const selectedDate = new Date(datePicker.value).toDateString();
     renderData(selectedDate, selectedDate);
+  });
+  showDataBtn.addEventListener("keydown", (e) => {
+    if (e.key === "space") {
+      console.log(e.key);
+      const selectedDate = new Date(datePicker.value).toDateString();
+      renderData(selectedDate, selectedDate);
+    }
   });
   previous.addEventListener("click", () => {
     renderData(yesterday, "Yesterday");

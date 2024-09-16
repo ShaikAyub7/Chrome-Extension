@@ -29,20 +29,25 @@ ul {
   line-height: 2rem;
   display: flex;
   padding: 30px;
-  gap: 5rem;
+  gap: 2rem;
 }
 .heading {
   text-align: center;
   margin-bottom: 20px;
 }
+#tabUrls::-webkit-scrollbar {
+  display: none;
+}
 #tabUrls {
-  width: 350px;
+  width: 300px;
   display: grid;
+  height: 300px;
   grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   /* font-weight: 500; */
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 20px;
+  overflow: scroll;
 }
 
 .domain-container {
@@ -60,8 +65,10 @@ ul {
 
 canvas {
   height: 300px;
-  width: 300px;
+  width: 400px;
   margin-top: 20px;
+  overflow: scroll;
+  text-align: center;
 }
 .btn-arrow {
   padding: 5px;

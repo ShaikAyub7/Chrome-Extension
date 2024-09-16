@@ -18,10 +18,11 @@ ul {
 
 .container {
   padding: 35px;
-  width: 800px;
+  width: 850px;
   line-height: 2rem;
   display: flex;
-  gap: 10rem;
+  padding: 30px;
+  gap: 5rem;
 }
 .heading {
   text-align: center;
@@ -40,3 +41,7 @@ ul {
 /* .time {
   justify-content: end;
 } */
+canvas {
+  height: 400px;
+  width: 400px;
+}

@@ -1,57 +1,96 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Popup script loaded.");
-
-  const today = new Date().toDateString();
   const urlList = document.getElementById("tabUrls");
-  console.log("urlList element:", urlList);
+  const selectedDateElement = document.getElementById("selectedDate");
+  const datePicker = document.getElementById("datePicker");
+  const showDataBtn = document.getElementById("showData");
 
-  chrome.storage.local.get([today], (data) => {
-    console.log("Data from storage:", data);
+  let chartInstance = null;
 
-    let tabData = data[today] || {};
-    if (Object.keys(tabData).length === 0) {
-      console.log("No data found for today.");
-      urlList.innerHTML = "<li>No data available for today.</li>";
-      return;
-    }
+  const today = new Date().toISOString().split("T")[0];
+  datePicker.value = today;
 
-    for (const domain in tabData) {
-      const { runtime } = tabData[domain];
+  const renderData = (selectedDate, dateLabel) => {
+    selectedDateElement.innerText = `Data for: ${dateLabel}`;
 
-      const seconds = Math.floor(runtime / 1000) % 60;
-      const minutes = Math.floor(runtime / (1000 * 60)) % 60;
-      const hours = Math.floor(runtime / (1000 * 60 * 60));
+    chrome.storage.local.get([selectedDate], (data) => {
+      let tabData = data[selectedDate] || {};
+      urlList.innerHTML = "";
 
-      const listItem = `
-      <div class='domain-container'>
+      if (Object.keys(tabData).length === 0) {
+        urlList.innerHTML = "<li>No data available.</li>";
+        return;
+      }
+
+      const chartLabels = [];
+      const chartData = [];
+      const chartColors = [];
+
+      for (const domain in tabData) {
+        const { runtime } = tabData[domain];
+
+        const seconds = Math.floor(runtime / 1000) % 60;
+        const minutes = Math.floor(runtime / (1000 * 60)) % 60;
+        const hours = Math.floor(runtime / (1000 * 60 * 60));
+
+        const listItem = `
+        <div class='domain-container'>
         <li>${domain}</li> 
         <p class='time'>Time Spent: ${hours}h ${minutes}m ${seconds}s</p>
         
-     </div> `;
-      urlList.insertAdjacentHTML("afterbegin", listItem);
-    }
-  });
+     </div>`;
+        urlList.insertAdjacentHTML("afterbegin", listItem);
 
-  const ctx = document.getElementById("myChart");
+        chartLabels.push(domain);
+        chartData.push(runtime / (1000 * 60));
+      }
 
-  new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1,
+      const ctx = document.getElementById("myChart").getContext("2d");
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      chartInstance = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: chartLabels,
+          datasets: [
+            {
+              label: "Time Spent (minutes)",
+              data: chartData,
+              borderWidth: 1,
+            },
+          ],
         },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom",
+              font: {
+                size: 14,
+              },
+              boxWidth: 20,
+            },
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  const minutes = tooltipItem.raw;
+                  const hours = Math.floor(minutes / 60);
+                  const mins = Math.floor(minutes % 60);
+                  return `${tooltipItem.label}: ${hours}h ${mins}m`;
+                },
+              },
+            },
+          },
         },
-      },
-    },
+      });
+    });
+  };
+
+  const todayLabel = new Date().toDateString();
+  renderData(todayLabel, "Today");
+
+  showDataBtn.addEventListener("click", () => {
+    const selectedDate = new Date(datePicker.value).toDateString();
+    renderData(selectedDate, selectedDate);
   });
 });

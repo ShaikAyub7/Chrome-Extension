@@ -3,14 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedDateElement = document.getElementById("selectedDate");
   const datePicker = document.getElementById("datePicker");
   const showDataBtn = document.getElementById("showData");
+  const previous = document.getElementById("showYesterday");
 
   let chartInstance = null;
 
   const today = new Date().toISOString().split("T")[0];
   datePicker.value = today;
+  const yesterday = new Date(
+    new Date().setDate(new Date().getDate() - 1)
+  ).toDateString();
 
   const renderData = (selectedDate, dateLabel) => {
-    selectedDateElement.innerText = `Data for: ${dateLabel}`;
+    selectedDateElement.innerText = `Data of: ${dateLabel}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
@@ -92,5 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
   showDataBtn.addEventListener("click", () => {
     const selectedDate = new Date(datePicker.value).toDateString();
     renderData(selectedDate, selectedDate);
+  });
+  previous.addEventListener("click", () => {
+    renderData(yesterday, "Yesterday");
   });
 });

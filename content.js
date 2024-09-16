@@ -33,11 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const hours = Math.floor(runtime / (1000 * 60 * 60));
 
         const listItem = `
-        <div class='domain-container'>
+        <div class="tab-urls">
+
         <li>${domain}</li> 
+        </div>
+        <div class="time-container">
         <p class='time'>Time Spent: ${hours}h ${minutes}m ${seconds}s</p>
-        
-     </div>`;
+        </div>`;
         urlList.insertAdjacentHTML("afterbegin", listItem);
 
         chartLabels.push(domain);

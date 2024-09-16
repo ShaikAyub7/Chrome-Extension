@@ -5,6 +5,13 @@
     <script src="content.js"></script>
     <link rel="stylesheet" href="/style.css" />
     <script src="./node_modules/chart.js/dist/chart.umd.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
     <div class="container">
@@ -12,8 +19,11 @@
         <h3 class="heading">Open Tab URLs</h3>
         <p id="data"></p>
         <h4 id="selectedDate"></h4>
+        <button id="showYesterday">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
         <input type="date" id="datePicker" />
-        <button id="showData">Show Data for Selected Date</button>
+        <button id="showData"><i class="fa-solid fa-arrow-right"></i></button>
 
         <ul id="tabUrls"></ul>
       </div>

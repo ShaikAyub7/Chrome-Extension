@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let count = 0;
   let chartInstance = null;
   const today = new Date().toISOString().split("T")[0];
-  datePicker.value = today;
+  // datePicker.value = today;
 
   const getYesterdayDate = () => {
     const date = new Date();
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderData = (selectedDate, dateLabel) => {
     let totalRuntime = 0;
-    selectedDateElement.innerText = `Data of: ${dateLabel}`;
+    selectedDateElement.innerText = ` ${dateLabel}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
         const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
 
-        totalTimeDisplay.textContent = `Total time spent: ${totalHours} hours, ${totalMinutes} minutes, ${totalSeconds} seconds`;
+        totalTimeDisplay.textContent = `Total time spent: ${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
@@ -121,16 +121,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const uniqueColors = [
-        "#FF6384",
-        "#36A2EB",
-        "#FFCE56",
-        "#4BC0C0",
-        "#9966FF",
-        "#FF9F40",
-        "#C9CBCF",
-        "#8A2BE2",
-        "#00FA9A",
-        "#FFD700",
+        "#e63946", // Red
+        "#9e0059", // Deep Pink
+        "#640d14", // Dark Red
+        "#FF6384", // Pink
+        "#36A2EB", // Blue
+        "#FFCE56", // Yellow
+        "#4BC0C0", // Aqua Green
+        "#9966FF", // Purple
+        "#FF9F40", // Orange
+        "#C9CBCF", // Grey
+        "#8A2BE2", // BlueViolet
+        "#00FA9A", // MediumSpringGreen
+        "#FFD700", // Gold
+        "#22b8cf", // Cyan
+        "#6a0572", // Dark Purple
+        "#f72585", // Magenta
+        "#3a0ca3", // Dark Blue
+        "#f94144", // Vibrant Red
+        "#43aa8b", // Mint Green
+        "#f3722c", // Warm Orange
+        "#90be6d", // Soft Green
+        "#577590", // Slate Blue
+        "#ff6f61", // Coral
+        "#2d6a4f", // Forest Green
+        "#9d0208", // Burgundy
+        "#007f5f", // Jade Green
+        "#8338ec", // Electric Purple
+        "#ffbe0b", // Bright Yellow
+        "#00b4d8", // Light Blue
+        "#9b5de5", // Light Purple
       ];
       const backgroundColors = chartLabels.map(
         (_, index) => uniqueColors[index % uniqueColors.length]
@@ -174,19 +194,24 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
     });
+    const customLegend = document.getElementById("customLegend");
+    customLegend.innerHTML = `
+      <h3 class='graphHeading'>Graph</h3>
+      "<small>This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>";
+  `;
   };
 
   const todayLabel = new Date().toDateString();
   renderData(todayLabel, "Today");
 
   showDataBtn.addEventListener("click", () => {
-    const selectedDate = new Date(datePicker.value).toDateString();
+    // const selectedDate = new Date(datePicker.value).toDateString();
     renderData(selectedDate, selectedDate);
   });
 
   showDataBtn.addEventListener("keydown", (e) => {
     if (e.key === " ") {
-      const selectedDate = new Date(datePicker.value).toDateString();
+      // const selectedDate = new Date(datePicker.value).toDateString();
       renderData(selectedDate, selectedDate);
     }
   });

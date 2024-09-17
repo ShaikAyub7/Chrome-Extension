@@ -1,13 +1,12 @@
 {
-  "name": "My Extension",
-  "description": "My first extension",
-  "version": "1.2",
   "manifest_version": 3,
-  "permissions": ["storage", "activeTab", "scripting", "tabs"],
-
+  "name": "Tab Time Tracker",
+  "description": "Tab Time Tracker is a simple and intuitive Chrome extension that helps you monitor your daily browsing habits. By tracking the time you spend on each domain, it provides you with insights into your online activity and helps you stay productive. The extension logs the time spent on every website you visit throughout the day, avoiding duplicate entries for multiple tabs of the same site, and presents the data in a clean and informative interface.",
   "background": {
     "service_worker": "background.js"
   },
+  "version": "1.2",
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -16,7 +15,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["./images/webimg.png"],
+      "resources": ["images/webimg.png"],
       "matches": ["<all_urls>"]
     }
   ],
@@ -24,8 +23,8 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "16": "images/box.png",
-    "48": "images/box.png",
-    "128": "images/box.png"
+    "16": "images/logo2.png",
+    "48": "images/logo2.png",
+    "128": "images/logo2.png"
   }
 }

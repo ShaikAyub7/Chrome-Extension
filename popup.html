@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Open Tab URLs</title>
+    <title>Tab Time Tracker</title>
     <script src="content.js"></script>
     <link rel="stylesheet" href="/style.css" />
     <script src="./node_modules/chart.js/dist/chart.umd.js"></script>
@@ -16,27 +16,31 @@
   <body>
     <div class="container">
       <div>
-        <h3 class="heading">Open Tab URLs</h3>
+        <h3 class="heading">Tab Time Tracker - Efficient Browsing Insights</h3>
         <p id="data"></p>
         <div class="date-container">
-          <h4 id="selectedDate"></h4>
+          <!-- <h4 id="selectedDate"></h4> -->
           <div class="totalTimeDisplay"></div>
         </div>
+        <div class="btnContainer">
+          <button id="showData" class="btn-arrow arrow-right">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <!-- <input type="date" id="datePicker" class="calender" /> -->
+          <h4 id="selectedDate"></h4>
 
-        <button id="showData" class="btn-arrow arrow-right">
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <input type="date" id="datePicker" class="calender" />
-
-        <button class="today" id="today">Today</button>
-
-        <button id="showYesterday" class="btn-arrow arrow-left">
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
+          <button id="showYesterday" class="btn-arrow arrow-left">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button class="today" id="today">
+            <i class="fa-solid fa-arrow-down-up-across-line"></i>
+          </button>
+        </div>
         <div id="tabUrls"></div>
       </div>
       <div>
         <canvas id="myChart"></canvas>
+        <div id="customLegend"></div>
       </div>
     </div>
   </body>

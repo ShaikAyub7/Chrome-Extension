@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tab Time Tracker",
-  "description": "Tab Time Tracker is a simple and intuitive Chrome extension that helps you monitor your daily browsing habits. By tracking the time you spend on each domain, it provides you with insights into your online activity and helps you stay productive. The extension logs the time spent on every website you visit throughout the day, avoiding duplicate entries for multiple tabs of the same site, and presents the data in a clean and informative interface.",
+  "description": "Tab Time Tracker is a simple and intuitive Chrome extension that helps you monitor your daily browsing habits.",
   "background": {
     "service_worker": "background.js"
   },

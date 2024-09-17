@@ -28,6 +28,10 @@ ul {
   width: 100%;
   line-height: 2rem;
   display: flex;
+  background-color: #fcf9f9;
+  color: #000;
+  justify-content: center;
+  align-items: center;
   padding: 30px;
   gap: 2rem;
 }
@@ -39,17 +43,37 @@ ul {
   display: none;
 }
 #tabUrls {
-  width: 300px;
-  display: grid;
+  width: 320px;
+  /* display: grid; */
   height: 300px;
-  grid-template-columns: 1fr 1fr;
+
   justify-content: space-between;
   /* font-weight: 500; */
   font-size: 12px;
   margin-top: 20px;
   overflow: scroll;
 }
-
+.mainContainer {
+  background-color: #fdfeff;
+  display: flex;
+  color: gray;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  justify-content: space-between;
+  padding: 8px;
+  font-weight: 500;
+  border: 0.1px solid gray;
+  /* box-shadow: 0px 0px 0px #222; */
+}
+.logoConatiner {
+  display: flex;
+}
+.logoConatiner img {
+  width: 20px;
+  margin-right: 5px;
+  margin-top: 7px;
+  height: 20px;
+}
 .domain-container {
   display: flex;
   justify-content: space-between;
@@ -58,24 +82,44 @@ ul {
   font-size: 15px;
   gap: 2rem;
 }
+/* Light Theme (default if the system is set to light) */
+
+/* Dark Theme (if the system is set to dark) */
+@media (prefers-color-scheme: dark) {
+  .container {
+    padding: 35px;
+    width: 100%;
+    line-height: 2rem;
+    display: flex;
+    background-color: #242222;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    gap: 2rem;
+  }
+}
 .time {
   display: flex;
   justify-content: start;
 }
 
 canvas {
-  height: 300px;
-  width: 400px;
-  margin-top: 20px;
+  height: 200px;
+  width: 200px;
+  top: 50%;
   overflow: scroll;
-  text-align: center;
 }
 .btn-arrow {
   padding: 5px;
   border: none;
   background-color: cornflowerblue;
 }
-
+.today {
+  padding: 5px;
+  border: none;
+  background-color: cornflowerblue;
+}
 .calender {
   border: none;
   margin-top: 20px;

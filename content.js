@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getLogoUrl(domain) {
     // Use Clearbit or a default logo if the domain logo is unavailable
-    return `https://unavatar.io/${domain}`;
+    return `https://unavatar.io/${domain}
+
+`;
   }
   let count = 0;
   let chartInstance = null;

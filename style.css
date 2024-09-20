@@ -101,9 +101,9 @@ ul {
     gap: 2rem;
   }
   .mainContainer {
-    background-color: #434040;
+    background-color: #bbbbbb;
     display: flex;
-    color: #fff;
+    color: black;
     margin-bottom: 5px;
     border-radius: 10px;
     justify-content: space-between;

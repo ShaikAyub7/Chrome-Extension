@@ -23,8 +23,8 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "16": "images/logo2.png",
-    "48": "images/logo2.png",
-    "128": "images/logo2.png"
+    "26": "images/logo3.png",
+    "48": "images/logo3.png",
+    "128": "images/logo3.png"
   }
 }

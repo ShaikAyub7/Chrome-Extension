@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
   const datePicker = document.getElementById("datePicker");
-  const showDataBtn = document.getElementById("showData");
+  const showDataBtn = document.getElementById("nextDay");
   const previous = document.getElementById("showYesterday");
   const next = document.querySelector(".arrow-right");
   const todayDate = document.getElementById("today");
@@ -206,17 +206,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayLabel = new Date().toDateString();
   renderData(todayLabel, "Today");
 
-  showDataBtn.addEventListener("click", () => {
-    // const selectedDate = new Date(datePicker.value).toDateString();
-    renderData(selectedDate, selectedDate);
-  });
+  // showDataBtn.addEventListener("click", () => {
+  //   // const selectedDate = new Date(datePicker.value).toDateString();
+  //   renderData(selectedDate, selectedDate);
+  // });
 
-  showDataBtn.addEventListener("keydown", (e) => {
-    if (e.key === " ") {
-      // const selectedDate = new Date(datePicker.value).toDateString();
-      renderData(selectedDate, selectedDate);
-    }
-  });
+  // showDataBtn.addEventListener("keydown", (e) => {
+  //   if (e.key === " ") {
+  //     // const selectedDate = new Date(datePicker.value).toDateString();
+  //     renderData(selectedDate, selectedDate);
+  //   }
+  // });
 
   todayDate.addEventListener("click", () => {
     renderData(todaydate, "Today");

@@ -47,24 +47,26 @@ document.addEventListener("DOMContentLoaded", () => {
     date.setDate(date.getDate() - count);
     return date.toDateString(); // Returns date as a string
   };
-  const getTodayDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() + count);
-    return date.toDateString(); // Returns date as a string
-  };
+  // const getTodayDate = () => {
+  //   const date = new Date();
+  //   date.setDate(date.getDate() + count);
+  //   return date.toDateString(); // Returns date as a string
+  // };
 
   const todaydate = new Date(
     new Date().setDate(new Date().getDate())
   ).toDateString();
 
-  const yesterday = new Date(
-    new Date().setDate(new Date().getDate() + todayDate - { count })
-  ).toDateString();
+  // const yesterday = new Date(
+  //   new Date().setDate(new Date().getDate() + todayDate - { count })
+  // ).toDateString();
 
-  const tomorrow = new Date(
-    new Date().setDate(new Date().getDate() - todayDate + { count })
-  ).toDateString();
-
+  // const tomorrow = new Date(
+  //   new Date().setDate(new Date().getDate() - todayDate + { count })
+  // ).toDateString();
+  const formatDate = (date) => {
+    return new Date(date).toDateString(); // Return the date as a string
+  };
   const renderData = (selectedDate, dateLabel) => {
     let totalRuntime = 0;
     selectedDateElement.innerText = ` ${dateLabel}`;
@@ -85,10 +87,27 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
         totalRuntime += runtime;
+        function formatTime(milliseconds) {
+          const seconds = Math.floor(milliseconds / 1000) % 60;
+          const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+          const hours = Math.floor(milliseconds / (1000 * 60 * 60));
 
-        const seconds = Math.floor(runtime / 1000) % 60;
-        const minutes = Math.floor(runtime / (1000 * 60)) % 60;
-        const hours = Math.floor(runtime / (1000 * 60 * 60));
+          let timeString = "";
+
+          if (hours > 0) {
+            timeString += `${hours}h `;
+          }
+
+          if (minutes > 0 || hours > 0) {
+            timeString += `${minutes}m `;
+          }
+
+          timeString += `${seconds}s`;
+
+          return timeString;
+        }
+        const formattedTime = formatTime(runtime);
+
         const domainLogo = getLogoUrl(domain);
 
         const listItem = ` 
@@ -101,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
           <div class="time-container">
-            <p class='time'> ${hours}h ${minutes}m ${seconds}s</p>
+            <p class='time'> ${formattedTime}</p>
           </div>
            </div>`;
 
@@ -110,50 +129,50 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
         const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
         const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
-
-        totalTimeDisplay.textContent = `Total time spent: ${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+        totalTimeDisplay.classList.add("totalTimeDisplay");
+        totalTimeDisplay.textContent = `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
       }
-
       const ctx = document.getElementById("myChart").getContext("2d");
       if (chartInstance) {
-        chartInstance.destroy();
+        chartInstance.destroy(); // Destroy the previous chart instance
       }
 
       const uniqueColors = [
-        "#e63946", // Red
-        "#9e0059", // Deep Pink
-        "#640d14", // Dark Red
-        "#FF6384", // Pink
-        "#36A2EB", // Blue
-        "#FFCE56", // Yellow
-        "#4BC0C0", // Aqua Green
-        "#9966FF", // Purple
-        "#FF9F40", // Orange
-        "#C9CBCF", // Grey
-        "#8A2BE2", // BlueViolet
-        "#00FA9A", // MediumSpringGreen
-        "#FFD700", // Gold
-        "#22b8cf", // Cyan
-        "#6a0572", // Dark Purple
-        "#f72585", // Magenta
-        "#3a0ca3", // Dark Blue
-        "#f94144", // Vibrant Red
-        "#43aa8b", // Mint Green
-        "#f3722c", // Warm Orange
-        "#90be6d", // Soft Green
-        "#577590", // Slate Blue
-        "#ff6f61", // Coral
-        "#2d6a4f", // Forest Green
-        "#9d0208", // Burgundy
-        "#007f5f", // Jade Green
-        "#8338ec", // Electric Purple
-        "#ffbe0b", // Bright Yellow
-        "#00b4d8", // Light Blue
-        "#9b5de5", // Light Purple
+        "#e63946",
+        "#9e0059",
+        "#640d14",
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56",
+        "#4BC0C0",
+        "#9966FF",
+        "#FF9F40",
+        "#C9CBCF",
+        "#8A2BE2",
+        "#00FA9A",
+        "#FFD700",
+        "#22b8cf",
+        "#6a0572",
+        "#f72585",
+        "#3a0ca3",
+        "#f94144",
+        "#43aa8b",
+        "#f3722c",
+        "#90be6d",
+        "#577590",
+        "#ff6f61",
+        "#2d6a4f",
+        "#9d0208",
+        "#007f5f",
+        "#8338ec",
+        "#ffbe0b",
+        "#00b4d8",
+        "#9b5de5",
       ];
+
       const backgroundColors = chartLabels.map(
         (_, index) => uniqueColors[index % uniqueColors.length]
       );
@@ -168,19 +187,31 @@ document.addEventListener("DOMContentLoaded", () => {
               data: chartData,
               backgroundColor: backgroundColors,
               borderWidth: 1,
+              borderColor: "#ffffff",
+              hoverOffset: 30, // Create a dynamic hover effect
+              shadowOffsetX: 10, // Simulate a shadow for 3D-like effect
+              shadowOffsetY: 10,
+              shadowBlur: 10,
+              shadowColor: "rgba(0, 0, 0, 0.8)", // Light shadow color
             },
           ],
         },
         options: {
           responsive: true,
+          animation: {
+            animateScale: true,
+            animateRotate: true, // Smooth animations for rotation
+          },
           plugins: {
             legend: {
               display: false,
               position: "bottom",
-              font: {
-                size: 14,
+              labels: {
+                font: {
+                  size: 14,
+                },
+                boxWidth: 20,
               },
-              boxWidth: 20,
             },
             tooltip: {
               callbacks: {
@@ -191,6 +222,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   return `${tooltipItem.label}: ${hours}h ${mins}m`;
                 },
               },
+            },
+          },
+          elements: {
+            arc: {
+              borderRadius: 5, // Rounded edges for a softer look
             },
           },
         },
@@ -206,6 +242,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayLabel = new Date().toDateString();
   renderData(todayLabel, "Today");
 
+  console.log(todayLabel);
+  const toggleNextButtonVisibility = () => {
+    const today = formatDate(new Date());
+    const tomorrow = getYesterdayDate();
+    if (tomorrow === today) {
+      previous.style.opacity = 0.3;
+      previous.style.pointerEvents = "none";
+    } else {
+      previous.style.opacity = 1;
+      previous.style.pointerEvents = "auto";
+    }
+  };
   // showDataBtn.addEventListener("click", () => {
   //   // const selectedDate = new Date(datePicker.value).toDateString();
   //   renderData(selectedDate, selectedDate);
@@ -223,91 +271,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   previous.addEventListener("click", () => {
     const yesterday = getYesterdayDate();
+    toggleNextButtonVisibility();
     renderData(yesterday, yesterday);
     count--;
   });
   next.addEventListener("click", () => {
     const tomorrow = getYesterdayDate();
-
+    toggleNextButtonVisibility();
     renderData(tomorrow, tomorrow);
 
     count++;
-  });
-  let activeDomain = null;
-  let lastTimestamp = 0;
-  let intervalId = null;
-
-  function updateTabRuntime(domain, currentTime) {
-    const today = new Date().toDateString();
-    const elapsedTime = currentTime - lastTimestamp;
-
-    chrome.storage.local.get([today], (data) => {
-      let tabData = data[today] || {};
-
-      if (elapsedTime > 0) {
-        if (tabData[domain]) {
-          tabData[domain].runtime += elapsedTime;
-        } else {
-          tabData[domain] = { runtime: elapsedTime };
-        }
-
-        chrome.storage.local.set({ [today]: tabData });
-      }
-    });
-  }
-
-  function startTrackingTime() {
-    if (intervalId) clearInterval(intervalId);
-
-    intervalId = setInterval(() => {
-      if (activeDomain) {
-        const currentTime = new Date().getTime();
-        updateTabRuntime(activeDomain, currentTime);
-        lastTimestamp = currentTime;
-      }
-    }, 100);
-  }
-
-  chrome.tabs.onActivated.addListener((activeInfo) => {
-    const currentTime = new Date().getTime();
-
-    if (activeDomain !== null) {
-      updateTabRuntime(activeDomain, currentTime);
-    }
-
-    chrome.tabs.get(activeInfo.tabId, (tab) => {
-      if (tab && tab.url) {
-        const domain = new URL(tab.url).hostname;
-        activeDomain = domain;
-        lastTimestamp = currentTime;
-
-        startTrackingTime();
-      }
-    });
-  });
-
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === "complete" && tab.url) {
-      const currentTime = new Date().getTime();
-      const domain = new URL(tab.url).hostname;
-
-      if (activeDomain !== null && domain !== activeDomain) {
-        updateTabRuntime(activeDomain, currentTime);
-      }
-
-      activeDomain = domain;
-      lastTimestamp = currentTime;
-      startTrackingTime();
-    }
-  });
-
-  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    const currentTime = new Date().getTime();
-
-    if (activeDomain !== null) {
-      updateTabRuntime(activeDomain, currentTime);
-      activeDomain = null;
-      clearInterval(intervalId);
-    }
   });
 });

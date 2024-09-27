@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedDateElement = document.getElementById("selectedDate");
   const datePicker = document.getElementById("datePicker");
   const showDataBtn = document.getElementById("nextDay");
-  const previous = document.getElementById("showYesterday");
-  const next = document.querySelector(".arrow-right");
+  const next = document.getElementById("showYesterday");
+  const previous = document.querySelector(".arrow-right");
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
 
@@ -38,12 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
 `;
   }
   let count = 0;
+  let current = new Date();
+  let name = "saad";
+  console.log({ name });
   let chartInstance = null;
   const today = new Date().toISOString().split("T")[0];
   // datePicker.value = today;
 
-  const getYesterdayDate = () => {
+  const getCurrentDay = () => {
     const date = new Date();
+    current = date.setDate(date.getDate() - count);
     date.setDate(date.getDate() - count);
     return date.toDateString(); // Returns date as a string
   };
@@ -52,10 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //   date.setDate(date.getDate() + count);
   //   return date.toDateString(); // Returns date as a string
   // };
-
-  const todaydate = new Date(
-    new Date().setDate(new Date().getDate())
-  ).toDateString();
 
   // const yesterday = new Date(
   //   new Date().setDate(new Date().getDate() + todayDate - { count })
@@ -68,8 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Date(date).toDateString(); // Return the date as a string
   };
   const renderData = (selectedDate, dateLabel) => {
+    console.log({ selectedDate });
+    console.log({ dateLabel });
     let totalRuntime = 0;
-    selectedDateElement.innerText = ` ${dateLabel}`;
+    selectedDateElement.innerText = ` ${name}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
@@ -116,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class='logoConatiner'>
               <img src="${domainLogo}" alt="Logo" class="domain-logo"
                    onerror="this.onerror=null;this.src='/images/webimg.png';" />
-              <p>${domain}</p> 
+              <a href="https://${domain}" target="_blank" >${domain}</a> 
             </div>
           </div>
           <div class="time-container">
@@ -200,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
           responsive: true,
           animation: {
             animateScale: true,
-            animateRotate: true, // Smooth animations for rotation
+            animateRotate: true,
           },
           plugins: {
             legend: {
@@ -226,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           elements: {
             arc: {
-              borderRadius: 5, // Rounded edges for a softer look
+              borderRadius: 5,
             },
           },
         },
@@ -239,14 +241,13 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   };
 
-  const todayLabel = new Date().toDateString();
-  renderData(todayLabel, "Today");
+  const CurrentDate = formatDate(new Date());
+  renderData(CurrentDate, CurrentDate);
 
-  console.log(todayLabel);
   const toggleNextButtonVisibility = () => {
     const today = formatDate(new Date());
-    const tomorrow = getYesterdayDate();
-    if (tomorrow === today) {
+    const nextDate = getCurrentDay();
+    if (nextDate === today) {
       previous.style.opacity = 0.3;
       previous.style.pointerEvents = "none";
     } else {
@@ -267,18 +268,33 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
 
   todayDate.addEventListener("click", () => {
-    renderData(todaydate, "Today");
+    renderData(CurrentDate, CurrentDate);
   });
   previous.addEventListener("click", () => {
-    const yesterday = getYesterdayDate();
+    console.log("previous", current);
+    name = "ayub";
+    console.log({ name });
+    current;
+    const currentDay = getCurrentDay();
+
+    // console.log("date", new Date(currentDay).getDate());
+    // console.log("today", new Date());
+    console.log(
+      new Date(currentDay).toDateString() === new Date().toDateString()
+    );
+    if (new Date(currentDay).toDateString() === new Date().toDateString()) {
+      return;
+    }
     toggleNextButtonVisibility();
-    renderData(yesterday, yesterday);
+    renderData(currentDay, currentDay);
     count--;
   });
   next.addEventListener("click", () => {
-    const tomorrow = getYesterdayDate();
+    const currentDay = getCurrentDay();
+    console.log("date", currentDay);
+
     toggleNextButtonVisibility();
-    renderData(tomorrow, tomorrow);
+    renderData(currentDay, currentDay);
 
     count++;
   });

@@ -27,21 +27,19 @@ ul {
 
 .container {
   padding: 35px;
-
-  width: 100%;
   line-height: 2rem;
-  display: flex;
+  display: grid;
   /* background-color: #eeeeee; */
   /* background: url("./images/night-3505.gif") no-repeat center center; */
   background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5)),
     url("./images/night-3505.gif") no-repeat center center;
-
   color: #fff;
   background-size: cover;
-  justify-content: center;
+  grid-template-columns: 1fr;
+  /* justify-content: space-between; */
   align-items: center;
   padding: 30px;
-  gap: 2rem;
+  gap: 5rem;
 }
 
 .heading {

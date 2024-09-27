@@ -5,6 +5,7 @@
   "background": {
     "service_worker": "background.js"
   },
+  "options_page": "option.html",
   "version": "1.2",
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [

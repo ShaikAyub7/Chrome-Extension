@@ -188,9 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
               backgroundColor: backgroundColors,
               borderWidth: 1,
               borderColor: "#ffffff",
-              hoverOffset: 30, // Create a dynamic hover effect
-              shadowOffsetX: 10, // Simulate a shadow for 3D-like effect
-              shadowOffsetY: 10,
+              hoverOffset: 10, // Create a dynamic hover effect
+              shadowOffsetX: 15, // Simulate a shadow for 3D-like effect
+              shadowOffsetY: 20,
               shadowBlur: 10,
               shadowColor: "rgba(0, 0, 0, 0.8)", // Light shadow color
             },
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 font: {
                   size: 14,
                 },
-                boxWidth: 20,
+                boxWidth: 1000,
               },
             },
             tooltip: {

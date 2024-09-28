@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "chart.js": "^4.4.4"
+    "chart.js": "^4.4.4",
+    "dayjs": "^1.11.13"
   }
 }

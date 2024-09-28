@@ -29,11 +29,9 @@ ul {
   padding: 35px;
   line-height: 2rem;
   display: flex;
-  background-color: #eeeeee;
-  /* background: url("./images/night-3505.gif") no-repeat center center; */
-  /* background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5)),
-    url("./images/night-3505.gif") no-repeat center center; */
-  color: #000;
+  background-color: #111;
+  color: #fff;
+
   background-size: cover;
 
   justify-content: space-between;
@@ -53,6 +51,7 @@ ul {
 .heading-span {
   font-size: 14px;
   font-weight: 400;
+  color: #dedede;
 }
 #tabUrls::-webkit-scrollbar {
   display: none;
@@ -69,19 +68,17 @@ ul {
   overflow: scroll;
 }
 .mainContainer {
-  background-color: #fdfeff;
   display: flex;
-  color: rgb(58, 58, 58);
+  background-color: #272729;
+  color: #000;
   margin-bottom: 5px;
   cursor: pointer;
   border-radius: 10px;
   justify-content: space-between;
   padding: 8px;
   font-weight: 500;
-  /* border: 0.1px solid rgb(142, 142, 142); */
+  overflow: hidden;
   box-shadow: 0 4px 8px rgba(30, 30, 30, 0.1);
-  /* box-shadow: rgba(35, 34, 34, 0.3) 0px 19px 38px,
-    rgba(0, 0, 0, 0.22) 0px 15px 12px; */
 }
 .logoConatiner {
   display: flex;
@@ -91,6 +88,20 @@ ul {
   margin-right: 5px;
   margin-top: 7px;
   height: 20px;
+}
+.logoConatiner p {
+  font-size: 14px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+}
+.logoConatiner a {
+  color: #fff;
+}
+.logoConatiner a:hover {
+  color: rgb(171, 210, 233);
 }
 .domain-container {
   display: flex;
@@ -104,61 +115,41 @@ ul {
 .time {
   display: flex;
   justify-content: start;
+  color: #fff;
 }
 
 .btnContainer {
   display: flex;
-  width: 250px;
-  justify-content: space-between;
+  width: 300px;
+  justify-content: center;
+  gap: 0.5rem;
 }
 canvas {
-  height: 300px;
-  width: 300px;
+  height: 250px;
+  width: 250px;
   cursor: pointer;
   position: relative;
-  /* border: 2px solid white; */
 }
-.canvas pie {
-  border: 2px solid white;
-}
+
 .btn-arrow {
   padding: 5px;
-  border: 1px solid gray;
   background: none;
-  color: #000;
+  color: #fff;
+  border: none;
   cursor: pointer;
   border-radius: 5px;
   /* background-color: cornflowerblue; */
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-.btn-arrow:hover {
-  transform: scale(1.3);
-}
-.today:hover {
-  transform: scale(1.1);
-}
-.today {
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+.todayBtn {
   padding: 5px;
-  color: #000;
+  color: #dedede;
   border-radius: 5px;
-  border: 1px solid gray;
   background: none;
-  font-size: 1rem;
+  font-size: 12px;
   cursor: pointer;
 }
 
-.calender {
-  border: none;
-  background: none;
-  color: #000000;
-  margin-top: 20px;
-  margin: 8px;
-}
-.calender:focus {
-  outline: none;
-  box-shadow: inset 0px 0px 0.5px #222;
-}
 #customLegend {
   text-align: start;
   line-height: 20px;
@@ -168,15 +159,10 @@ canvas {
   text-align: center;
 }
 .totalTimeDisplay {
-  color: #000000;
   font-size: 16px;
-  background-color: #fff;
-  max-width: 150px;
-  display: flex;
-  border: 1px solid gray;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
+  padding: 1px;
+  color: #dedede;
+
   border-radius: 5px;
 }
 #customLegend {
@@ -189,49 +175,5 @@ canvas {
 }
 #customLegend small {
   font-size: 14px;
-}
-@media (prefers-color-scheme: dark) {
-  .container {
-    padding: 35px;
-    width: 100%;
-    line-height: 2rem;
-    display: flex;
-    background-color: #111;
-    color: #fff;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-    gap: 2rem;
-  }
-  .mainContainer {
-    background-color: #272729;
-    display: flex;
-    color: rgb(255, 255, 255);
-    margin-bottom: 5px;
-    border-radius: 10px;
-
-    justify-content: space-between;
-    padding: 8px;
-    font-weight: 500;
-    /* border: 0.1px solid gray; */
-    /* box-shadow: 0 2px 2px rgba(87, 86, 86, 0.3); */
-  }
-  .calender {
-    color: #fff;
-    background-color: white;
-  }
-  .today {
-    color: #fff;
-  }
-  .fa-solid {
-    padding: 5px;
-    border: none;
-    background: none;
-    color: #ffff;
-    /* background-color: cornflowerblue; */
-  }
-  .logoConatiner p {
-    font-size: 14px;
-    margin-left: 5px;
-  }
+  color: #dedede;
 }

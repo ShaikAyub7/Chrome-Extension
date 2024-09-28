@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
 
   let current = dayjs();
-  let currentDate = current.format("ddd MMM D YYYY");
+  let currentDate = dayjs().format("ddd MMM D YYYY");
   let chartInstance = null;
 
   function getLogoUrl(domain) {
@@ -25,8 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
       urlList.innerHTML = "";
-
       if (Object.keys(tabData).length === 0) {
+        totalTimeDisplay.innerHTML = `
+    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; 00:00:00
+  `;
         urlList.innerHTML = "<li>No data available.</li>";
         return;
       }
@@ -73,19 +75,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         urlList.insertAdjacentHTML("afterbegin", listItem);
 
+        totalTimeDisplay.classList.add("totalTimeDisplay");
+        totalTimeDisplay.innerHTML = `
+<i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; No Data Available
+`;
+
+        // Calculate the total runtime in hours, minutes, seconds
         const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
         const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
         const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
 
+        // Format the total time with leading zeroes if necessary
         const formattedSeconds = totalSeconds.toString().padStart(2, "0");
         const formattedMinutes = totalMinutes.toString().padStart(2, "0");
         const formattedHours = totalHours.toString().padStart(2, "0");
 
+        // Display the total time
         totalTimeDisplay.classList.add("totalTimeDisplay");
-        totalTimeDisplay.classList.add("totalTimeDisplay");
+
         totalTimeDisplay.innerHTML = `
-  <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
-`;
+    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
+  `;
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
@@ -195,24 +205,15 @@ document.addEventListener("DOMContentLoaded", () => {
     renderData(currentDate);
   });
   previous.addEventListener("click", () => {
-    console.log("previous clickes");
     const nextDay = dayjs(current).subtract(1, "day");
     current = nextDay;
     const formattedPreviousDay = nextDay.format("ddd MMM D YYYY");
     renderData(formattedPreviousDay);
   });
   next.addEventListener("click", () => {
-    console.log({ current });
-    // console.log(currentDate.isSame(dayjs(), "day"));
-    // if (dayjs.isSame(current, "day")) {
-    //   return;
-    // }
     const nextDay = dayjs(current).add(1, "day");
     current = nextDay;
     const formattedNextDay = nextDay.format("ddd MMM D YYYY");
-    console.log({
-      formattedNextDay,
-    });
     renderData(formattedNextDay);
   });
 });

@@ -2,89 +2,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
   const datePicker = document.getElementById("datePicker");
-  const showDataBtn = document.getElementById("nextDay");
-  const next = document.getElementById("showYesterday");
-  const previous = document.querySelector(".arrow-right");
+  const next = document.getElementById("nextDay");
+  const previous = document.getElementById("previousDay");
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
 
-  // Check if the user's theme is set to dark mode
-  const isDarkMode =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  if (isDarkMode) {
-    document.body.classList.add("dark-mode");
-  } else {
-    document.body.classList.remove("dark-mode");
-  }
-
-  // Optionally, listen for changes in the user's theme preference
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      const isDarkMode = e.matches;
-      if (isDarkMode) {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.remove("dark-mode");
-      }
-    });
+  let current = dayjs();
+  let currentDate = dayjs().format("ddd MMM D YYYY");
+  let chartInstance = null;
 
   function getLogoUrl(domain) {
-    // Use Clearbit or a default logo if the domain logo is unavailable
     return `https://unavatar.io/${domain}
-
-`;
+    `;
   }
-  let count = 0;
-  let current = new Date();
-  let name = "saad";
-  console.log({ name });
-  let chartInstance = null;
-  const today = new Date().toISOString().split("T")[0];
-  // datePicker.value = today;
 
-  const getCurrentDay = () => {
-    const date = new Date();
-    current = date.setDate(date.getDate() - count);
-    date.setDate(date.getDate() - count);
-    return date.toDateString(); // Returns date as a string
-  };
-  // const getTodayDate = () => {
-  //   const date = new Date();
-  //   date.setDate(date.getDate() + count);
-  //   return date.toDateString(); // Returns date as a string
-  // };
-
-  // const yesterday = new Date(
-  //   new Date().setDate(new Date().getDate() + todayDate - { count })
-  // ).toDateString();
-
-  // const tomorrow = new Date(
-  //   new Date().setDate(new Date().getDate() - todayDate + { count })
-  // ).toDateString();
-  const formatDate = (date) => {
-    return new Date(date).toDateString(); // Return the date as a string
-  };
-  const renderData = (selectedDate, dateLabel) => {
-    console.log({ selectedDate });
-    console.log({ dateLabel });
+  const renderData = (selectedDate) => {
     let totalRuntime = 0;
-    selectedDateElement.innerText = ` ${name}`;
+    const chartLabels = [];
+    const chartData = [];
+    selectedDateElement.innerText = ` ${selectedDate}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
       urlList.innerHTML = "";
-
       if (Object.keys(tabData).length === 0) {
+        totalTimeDisplay.innerHTML = `
+    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; 00:00:00
+  `;
         urlList.innerHTML = "<li>No data available.</li>";
         return;
       }
-
-      const chartLabels = [];
-      const chartData = [];
-      const chartColors = [];
 
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
@@ -118,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class='logoConatiner'>
               <img src="${domainLogo}" alt="Logo" class="domain-logo"
                    onerror="this.onerror=null;this.src='/images/webimg.png';" />
-              <a href="https://${domain}" target="_blank" >${domain}</a> 
+             <p > <a href="https://${domain}" target="_blank" >${domain}</a> </p>
             </div>
           </div>
           <div class="time-container">
@@ -128,18 +75,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         urlList.insertAdjacentHTML("afterbegin", listItem);
 
+        totalTimeDisplay.classList.add("totalTimeDisplay");
+        totalTimeDisplay.innerHTML = `
+<i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; No Data Available
+`;
+
+        // Calculate the total runtime in hours, minutes, seconds
         const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
         const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
         const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
+
+        // Format the total time with leading zeroes if necessary
+        const formattedSeconds = totalSeconds.toString().padStart(2, "0");
+        const formattedMinutes = totalMinutes.toString().padStart(2, "0");
+        const formattedHours = totalHours.toString().padStart(2, "0");
+
+        // Display the total time
         totalTimeDisplay.classList.add("totalTimeDisplay");
-        totalTimeDisplay.textContent = `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+
+        totalTimeDisplay.innerHTML = `
+    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
+  `;
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
       }
       const ctx = document.getElementById("myChart").getContext("2d");
       if (chartInstance) {
-        chartInstance.destroy(); // Destroy the previous chart instance
+        chartInstance.destroy();
       }
 
       const uniqueColors = [
@@ -190,11 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
               backgroundColor: backgroundColors,
               borderWidth: 1,
               borderColor: "#ffffff",
-              hoverOffset: 10, // Create a dynamic hover effect
-              shadowOffsetX: 15, // Simulate a shadow for 3D-like effect
-              shadowOffsetY: 20,
-              shadowBlur: 10,
-              shadowColor: "rgba(0, 0, 0, 0.8)", // Light shadow color
             },
           ],
         },
@@ -228,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           elements: {
             arc: {
-              borderRadius: 5,
+              borderRadius: 1,
             },
           },
         },
@@ -241,61 +199,21 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   };
 
-  const CurrentDate = formatDate(new Date());
-  renderData(CurrentDate, CurrentDate);
-
-  const toggleNextButtonVisibility = () => {
-    const today = formatDate(new Date());
-    const nextDate = getCurrentDay();
-    if (nextDate === today) {
-      previous.style.opacity = 0.3;
-      previous.style.pointerEvents = "none";
-    } else {
-      previous.style.opacity = 1;
-      previous.style.pointerEvents = "auto";
-    }
-  };
-  // showDataBtn.addEventListener("click", () => {
-  //   // const selectedDate = new Date(datePicker.value).toDateString();
-  //   renderData(selectedDate, selectedDate);
-  // });
-
-  // showDataBtn.addEventListener("keydown", (e) => {
-  //   if (e.key === " ") {
-  //     // const selectedDate = new Date(datePicker.value).toDateString();
-  //     renderData(selectedDate, selectedDate);
-  //   }
-  // });
+  renderData(currentDate);
 
   todayDate.addEventListener("click", () => {
-    renderData(CurrentDate, CurrentDate);
+    renderData(currentDate);
   });
   previous.addEventListener("click", () => {
-    console.log("previous", current);
-    name = "ayub";
-    console.log({ name });
-    current;
-    const currentDay = getCurrentDay();
-
-    // console.log("date", new Date(currentDay).getDate());
-    // console.log("today", new Date());
-    console.log(
-      new Date(currentDay).toDateString() === new Date().toDateString()
-    );
-    if (new Date(currentDay).toDateString() === new Date().toDateString()) {
-      return;
-    }
-    toggleNextButtonVisibility();
-    renderData(currentDay, currentDay);
-    count--;
+    const nextDay = dayjs(current).subtract(1, "day");
+    current = nextDay;
+    const formattedPreviousDay = nextDay.format("ddd MMM D YYYY");
+    renderData(formattedPreviousDay);
   });
   next.addEventListener("click", () => {
-    const currentDay = getCurrentDay();
-    console.log("date", currentDay);
-
-    toggleNextButtonVisibility();
-    renderData(currentDay, currentDay);
-
-    count++;
+    const nextDay = dayjs(current).add(1, "day");
+    current = nextDay;
+    const formattedNextDay = nextDay.format("ddd MMM D YYYY");
+    renderData(formattedNextDay);
   });
 });

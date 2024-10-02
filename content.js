@@ -1,14 +1,48 @@
 document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
-  const datePicker = document.getElementById("datePicker");
   const next = document.getElementById("nextDay");
   const previous = document.getElementById("previousDay");
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
+  const toggleButton = document.getElementById("toggleTheme");
+  const prefersDarkScheme = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
+  // Function to apply the theme
+  function applyTheme(theme) {
+    document.body.classList.remove("light-mode", "dark-mode");
+    document.body.classList.add(theme);
+  }
+
+  // Load the saved theme from chrome.storage or use system preference
+  chrome.storage.local.get("theme", (data) => {
+    const theme =
+      data.theme || (prefersDarkScheme ? "dark-mode" : "light-mode");
+    applyTheme(theme);
+  });
+
+  toggleButton.addEventListener("click", () => {
+    const currentTheme = document.body.classList.contains("dark-mode")
+      ? "dark-mode"
+      : "light-mode";
+    const newTheme = currentTheme === "dark-mode" ? "light-mode" : "dark-mode";
+    applyTheme(newTheme);
+
+    chrome.storage.local.set({ theme: newTheme });
+  });
+
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      const theme = e.matches ? "dark-mode" : "light-mode";
+      applyTheme(theme);
+      chrome.storage.local.set({ theme });
+    });
 
   let current = dayjs();
-  let currentDate = dayjs().format("ddd MMM D YYYY");
+  let currentDate = dayjs().format("ddd MMM DD YYYY");
   let chartInstance = null;
 
   function getLogoUrl(domain) {
@@ -90,11 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const formattedMinutes = totalMinutes.toString().padStart(2, "0");
         const formattedHours = totalHours.toString().padStart(2, "0");
 
-        // Display the total time
         totalTimeDisplay.classList.add("totalTimeDisplay");
 
         totalTimeDisplay.innerHTML = `
-    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
+    <i class="fa-regular fa-clock" ></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
   `;
 
         chartLabels.push(domain);
@@ -195,25 +228,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const customLegend = document.getElementById("customLegend");
     customLegend.innerHTML = `
       <h3 class='graphHeading'>Graph</h3>
-      "<small>This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>";
+      <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
   `;
   };
 
   renderData(currentDate);
 
   todayDate.addEventListener("click", () => {
+    const today = dayjs().format("ddd MMM DD YYYY");
+    if (todayDate === today) {
+      next.style.opacity = 0.3;
+      next.style.pointerEvents = "none";
+    }
     renderData(currentDate);
   });
   previous.addEventListener("click", () => {
     const nextDay = dayjs(current).subtract(1, "day");
     current = nextDay;
-    const formattedPreviousDay = nextDay.format("ddd MMM D YYYY");
+    const formattedPreviousDay = nextDay.format("ddd MMM DD YYYY");
+    if (formattedPreviousDay !== currentDate) {
+      next.style.opacity = 1;
+      next.style.pointerEvents = "auto";
+    }
     renderData(formattedPreviousDay);
   });
   next.addEventListener("click", () => {
     const nextDay = dayjs(current).add(1, "day");
     current = nextDay;
-    const formattedNextDay = nextDay.format("ddd MMM D YYYY");
+
+    const formattedNextDay = nextDay.format("ddd MMM DD YYYY");
+    console.log(formattedNextDay);
+    if (formattedNextDay === currentDate) {
+      next.style.opacity = 0.3;
+      next.style.pointerEvents = "none";
+    } else {
+      next.style.opacity = 1;
+      next.style.pointerEvents = "auto";
+    }
     renderData(formattedNextDay);
   });
+  if (currentDate === dayjs().format("ddd MMM DD YYYY")) {
+    next.style.opacity = 0.3;
+    next.style.pointerEvents = "none";
+  } else {
+    next.style.opacity = 1;
+    next.style.pointerEvents = "auto";
+  }
 });

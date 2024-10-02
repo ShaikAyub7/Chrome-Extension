@@ -24,7 +24,7 @@ function updateTabRuntime(domain, currentTime) {
 function startTrackingTime() {
   if (intervalId) clearInterval(intervalId);
 
-  intervalId = setInterval(() => {
+  intervalId = setTimeout(() => {
     if (activeDomain) {
       const currentTime = new Date().getTime();
       updateTabRuntime(activeDomain, currentTime);

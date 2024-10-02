@@ -208,7 +208,7 @@ canvas {
 /* ///////////////////////////////////////// */
 /* Default styling for smooth transitions between themes */
 body {
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 5s, color 10s;
 }
 
 /* Light mode styles */

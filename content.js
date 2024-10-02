@@ -235,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderData(currentDate);
 
   todayDate.addEventListener("click", () => {
-    const today = dayjs().format("ddd MMM DD YYYY");
     if (todayDate === today) {
       next.style.opacity = 0.3;
       next.style.pointerEvents = "none";
@@ -243,9 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderData(currentDate);
   });
   previous.addEventListener("click", () => {
-    const nextDay = dayjs(current).subtract(1, "day");
-    current = nextDay;
-    const formattedPreviousDay = nextDay.format("ddd MMM DD YYYY");
+    const previousDay = dayjs(current).subtract(1, "day");
+    current = previousDay;
+    const formattedPreviousDay = previousDay.format("ddd MMM DD YYYY");
     if (formattedPreviousDay !== currentDate) {
       next.style.opacity = 1;
       next.style.pointerEvents = "auto";

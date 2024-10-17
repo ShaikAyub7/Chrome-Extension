@@ -17,16 +17,28 @@
   <body>
     <div class="container">
       <div>
-        <h3 class="heading">
-          Tab Time Tracker -<span class="heading-span"> Browsing Insights</span>
-        </h3>
+        <div class="HeadingContainer">
+          <h3 class="heading">
+            Tab Time Tracker -<span class="heading-span">
+              Browsing Insights</span
+            >
+          </h3>
+          <!-- <button id="toggleTheme" class="toggle">
+            <i class="fa-solid fa-circle-half-stroke"></i> Theme
+          </button> -->
+        </div>
         <p id="data"></p>
         <div class="date-container">
           <!-- <h4 id="selectedDate"></h4> -->
           <div class="totalTimeDisplay"></div>
-          <button id="toggleTheme" class="toggle">
-            <i class="fa-solid fa-circle-half-stroke"></i> Theme
-          </button>
+          <div class="darklightDiv">
+            <p class="themeText"></p>
+            <label class="switch">
+              <input type="checkbox" id="toggleTheme" />
+
+              <span class="slider round"></span>
+            </label>
+          </div>
         </div>
         <div class="btnContainer">
           <div class="btn">
@@ -44,6 +56,14 @@
           </div>
         </div>
         <div id="tabUrls"></div>
+        <div class="totalDomains"></div>
+        <!-- <div id="updateBar" class="update-bar">
+          <p>
+            New features added! Check out what's new in version
+            <span id="versionNumber"></span>.
+          </p>
+          <button id="closeUpdateBar">Close</button>
+        </div>-->
       </div>
       <div class="graph-container">
         <canvas id="myChart"></canvas>

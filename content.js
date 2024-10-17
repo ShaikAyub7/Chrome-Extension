@@ -5,15 +5,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const previous = document.getElementById("previousDay");
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
+  const totalDomains = document.querySelector(".totalDomains");
   const toggleButton = document.getElementById("toggleTheme");
+  const updateBar = document.getElementById("updateBar");
+  const versionNumber = document.getElementById("versionNumber");
+  const closeButton = document.getElementById("closeUpdateBar");
+  const themeText = document.querySelector(".themeText");
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
 
   // Function to apply the theme
   function applyTheme(theme) {
-    document.body.classList.remove("light-mode", "dark-mode");
-    document.body.classList.add(theme);
+    if (theme === "dark-mode") {
+      document.body.classList.remove("light-mode", "dark-mode");
+      document.body.classList.add(theme);
+      toggleButton.checked = true;
+      themeText.textContent = "Dark";
+    } else {
+      document.body.classList.remove("light-mode", "dark-mode");
+      document.body.classList.add(theme);
+      toggleButton.checked = false;
+      themeText.textContent = "Light";
+    }
   }
 
   // Load the saved theme from chrome.storage or use system preference
@@ -41,6 +55,20 @@ document.addEventListener("DOMContentLoaded", () => {
       chrome.storage.local.set({ theme });
     });
 
+  // setTimeout(() => {
+  //   const newVersion = chrome.runtime.getManifest().version;
+  //   versionNumber.textContent = newVersion;
+  //   const showUpdateBar = localStorage.getItem("showUpdateBar");
+  //   if (showUpdateBar !== "false") {
+  //     updateBar.style.display = "block";
+  //   }
+
+  //   closeButton.addEventListener("click", () => {
+  //     updateBar.style.display = "none";
+  //     localStorage.setItem("showUpdateBar", "false");
+  //   });
+  // });
+
   let current = dayjs();
   let currentDate = dayjs().format("ddd MMM DD YYYY");
   let chartInstance = null;
@@ -64,9 +92,17 @@ document.addEventListener("DOMContentLoaded", () => {
     <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; 00:00:00
   `;
         urlList.innerHTML = "<li>No data available.</li>";
+        totalDomains.innerHTML = `
+           Total Opened Websites : 0
+        `;
         return;
       }
-
+      const totalDomain = Object.keys(tabData).length;
+      if (totalDomain !== 0) {
+        totalDomains.innerHTML = `
+            Total Opened Websites : ${totalDomain}
+        `;
+      }
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
         totalRuntime += runtime;
@@ -225,9 +261,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
     });
+    // <h3 class='graphHeading'>Graph</h3>//
     const customLegend = document.getElementById("customLegend");
     customLegend.innerHTML = `
-      <h3 class='graphHeading'>Graph</h3>
       <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
   `;
   };

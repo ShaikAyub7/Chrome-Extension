@@ -24,7 +24,7 @@ function updateTabRuntime(domain, currentTime) {
 function startTrackingTime() {
   if (intervalId) clearInterval(intervalId);
 
-  intervalId = setTimeout(() => {
+  intervalId = setInterval(() => {
     if (activeDomain) {
       const currentTime = new Date().getTime();
       updateTabRuntime(activeDomain, currentTime);
@@ -74,4 +74,22 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     activeDomain = null;
     clearInterval(intervalId);
   }
+});
+
+// Trigger notification when the browser starts
+chrome.runtime.onStartup.addListener(() => {
+  const newVersion = chrome.runtime.getManifest().version;
+  chrome.notifications.create({
+    type: "basic",
+    iconUrl: "images/logo3.png",
+    title: "Extension Updated!",
+    message: `New version ${newVersion} is available. Click to see what's new.`,
+    buttons: [{ title: "See what's new" }],
+    requireInteraction: true,
+  });
+});
+
+// Handle the notification button click
+chrome.notifications.onButtonClicked.addListener(() => {
+  chrome.tabs.create({ url: "https://your-update-page-url.com" });
 });

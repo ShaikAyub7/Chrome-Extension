@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Tab Time Tracker",
   "description": "Tab Time Tracker is a simple and intuitive Chrome extension that helps you monitor your daily browsing habits.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "permissions": ["storage", "activeTab", "scripting", "tabs", "notifications"],
   "background": {
     "service_worker": "background.js"
@@ -24,8 +24,8 @@
     "default_popup": "popup.html"
   },
   "icons": {
-    "26": "images/logo3.png",
-    "48": "images/logo3.png",
-    "128": "images/logo3.png"
+    "26": "images/logo2.png",
+    "48": "images/logo2.png",
+    "128": "images/logo2.png"
   }
 }

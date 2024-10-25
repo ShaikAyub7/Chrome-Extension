@@ -87,20 +87,29 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
       urlList.innerHTML = "";
+
+      // const allDomain = Object.keys(tabData)
+      //   .map((domain) => [domain, tabData[domain].runtime]) // Create pairs [site, runtime]
+      //   .sort() // Sort by runtime in descending order
+      //   .map(([domain]) => domain); // Get the sorted site names
+
+      // console.log(allDomain);
+
       if (Object.keys(tabData).length === 0) {
         totalTimeDisplay.innerHTML = `
     <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; 00:00:00
   `;
         urlList.innerHTML = "<li>No data available.</li>";
         totalDomains.innerHTML = `
-           Total Opened Websites : 0
+    Opened Websites : 0
         `;
         return;
       }
       const totalDomain = Object.keys(tabData).length;
       if (totalDomain !== 0) {
         totalDomains.innerHTML = `
-            Total Opened Websites : ${totalDomain}
+           Opened Websites : ${totalDomain}
+ 
         `;
       }
       for (const domain in tabData) {

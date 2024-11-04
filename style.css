@@ -177,8 +177,8 @@ ul {
   gap: 0.5rem;
 }
 canvas {
-  height: 250px;
-  width: 250px;
+  height: 400px;
+  width: 400px;
   cursor: pointer;
   position: relative;
 }
@@ -200,7 +200,11 @@ canvas {
   font-size: 12px;
   cursor: pointer;
 }
-
+.calender {
+  border: none;
+  background: none;
+  color: #fff;
+}
 #customLegend {
   max-height: 100px;
   text-align: start;
@@ -279,6 +283,12 @@ canvas {
   border: none;
   cursor: pointer;
 }
+.graph-container {
+  overflow: scroll;
+}
+.graph-container::-webkit-scrollbar {
+  display: none;
+}
 /* ///////////////////////////////////////// */
 /* Default styling for smooth transitions between themes */
 body {
@@ -294,6 +304,9 @@ body {
 .light-mode .Container {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
+}
+.light-mode .calender {
+  color: #000;
 }
 /* Correct for light mode */
 .light-mode .mainContainer {

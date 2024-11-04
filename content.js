@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const versionNumber = document.getElementById("versionNumber");
   const closeButton = document.getElementById("closeUpdateBar");
   const themeText = document.querySelector(".themeText");
+
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -242,13 +243,13 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           plugins: {
             legend: {
-              display: false,
+              display: true,
               position: "bottom",
               labels: {
                 font: {
-                  size: 14,
+                  size: 15,
                 },
-                boxWidth: 1000,
+                boxWidth: 10,
               },
             },
             tooltip: {
@@ -290,12 +291,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const previousDay = dayjs(current).subtract(1, "day");
     current = previousDay;
     const formattedPreviousDay = previousDay.format("ddd MMM DD YYYY");
+    // document.querySelector(".calender").value = formattedPreviousDay;
+
     if (formattedPreviousDay !== currentDate) {
       next.style.opacity = 1;
       next.style.pointerEvents = "auto";
     }
     renderData(formattedPreviousDay);
   });
+
   next.addEventListener("click", () => {
     const nextDay = dayjs(current).add(1, "day");
     current = nextDay;
@@ -309,8 +313,12 @@ document.addEventListener("DOMContentLoaded", () => {
       next.style.opacity = 1;
       next.style.pointerEvents = "auto";
     }
+    //  let calender = document.querySelector(".calender").value;
+    //   calender = formattedNextDay;
+    //   console.log(calender);
     renderData(formattedNextDay);
   });
+
   if (currentDate === dayjs().format("ddd MMM DD YYYY")) {
     next.style.opacity = 0.3;
     next.style.pointerEvents = "none";

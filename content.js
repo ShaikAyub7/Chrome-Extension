@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const versionNumber = document.getElementById("versionNumber");
   const closeButton = document.getElementById("closeUpdateBar");
   const themeText = document.querySelector(".themeText");
+  const grapgBtn = document.querySelector(".grapgBth");
 
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
@@ -222,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       chartInstance = new Chart(ctx, {
-        type: "pie",
+        type: "doughnut",
         data: {
           labels: chartLabels,
           datasets: [
@@ -241,17 +242,25 @@ document.addEventListener("DOMContentLoaded", () => {
             animateScale: true,
             animateRotate: true,
           },
+          title: {
+            display: true,
+            text: "Chart.js Doughnut Chart",
+          },
           plugins: {
             legend: {
-              display: true,
-              position: "bottom",
-              labels: {
-                font: {
-                  size: 15,
-                },
-                boxWidth: 10,
-              },
+              display: false,
+              // position: "left",
+              // maxlength: 10,
+              // labels: {
+              //   font: {
+              //     display: false,
+              //   },
+              //   usePointStyle: true,
+              //   overflow: "wrap",
+              //   padding: 10,
+              // },
             },
+
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
@@ -271,11 +280,24 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
     });
-    // <h3 class='graphHeading'>Graph</h3>//
+    // <h3 class="graphHeading">Graph</h3>;
     const customLegend = document.getElementById("customLegend");
     customLegend.innerHTML = `
-      <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
-  `;
+         <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
+    `;
+
+    grapgBtn.addEventListener("click", function () {
+      console.log(chartInstance.config.type);
+      chartInstance.config.type =
+        chartInstance.config.type === "doughnut" ? "pie" : "doughnut";
+
+      if (chartInstance.config.type === "doughnut") {
+        grapgBtn.textContent = "Pie graph";
+      } else {
+        grapgBtn.textContent = "doughnut graph";
+      }
+      chartInstance.update();
+    });
   };
 
   renderData(currentDate);

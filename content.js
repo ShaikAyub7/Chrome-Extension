@@ -292,9 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
         chartInstance.config.type === "doughnut" ? "pie" : "doughnut";
 
       if (chartInstance.config.type === "doughnut") {
-        grapgBtn.textContent = "Pie graph";
+        grapgBtn.innerHTML = `<i class="fa-solid fa-circle-notch"></i> ${chartInstance.config.type}`;
       } else {
-        grapgBtn.textContent = "doughnut graph";
+        grapgBtn.innerHTML = `<i class="fa-solid fa-circle"></i> ${chartInstance.config.type}`;
       }
       chartInstance.update();
     });

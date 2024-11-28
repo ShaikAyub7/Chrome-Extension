@@ -94,7 +94,7 @@ ul {
   background: none;
   color: #fff;
   border: none;
-  border: 0.2px solid white;
+  /* border: 0.2px solid white; */
   cursor: pointer;
   border-radius: 5px;
 }
@@ -194,8 +194,8 @@ ul {
   gap: 0.5rem;
 }
 canvas {
-  height: 300px;
-  width: 300px;
+  height: 250px;
+  width: 250px;
   cursor: pointer;
   /* position: relative; */
   overflow: visible;

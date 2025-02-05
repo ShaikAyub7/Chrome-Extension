@@ -194,11 +194,10 @@ ul {
   gap: 0.5rem;
 }
 canvas {
-  height: 250px;
-  width: 250px;
+  /* height: 250px;
+  width: 250px; */
   cursor: pointer;
-  /* position: relative; */
-  overflow: visible;
+  overflow: hidden;
 }
 
 .btn-arrow {
@@ -415,4 +414,8 @@ body {
 }
 .dark-mode .heading-span {
   color: #dedede;
+}
+#myChart {
+  max-width: 400px;
+  max-height: 400px;
 }

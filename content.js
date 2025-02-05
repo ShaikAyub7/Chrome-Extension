@@ -12,12 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeButton = document.getElementById("closeUpdateBar");
   const themeText = document.querySelector(".themeText");
   const grapgBtn = document.querySelector(".grapgBth");
+  const alertTimeLimit = {};
 
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
 
-  // Function to apply the theme
   function applyTheme(theme) {
     if (theme === "dark-mode") {
       document.body.classList.remove("light-mode", "dark-mode");
@@ -32,7 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Load the saved theme from chrome.storage or use system preference
+  function checkAlerts(domain, runtime) {
+    if (alertTimeLimit[domain] && runtime >= alertTimeLimit[domain]) {
+      new Notification("Time Alert", {
+        body: `You have spent more than ${
+          alertTimeLimit[domain] / 60000
+        } minutes on ${domain}.`,
+      });
+    }
+  }
   chrome.storage.local.get("theme", (data) => {
     const theme =
       data.theme || (prefersDarkScheme ? "dark-mode" : "light-mode");
@@ -57,20 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
       chrome.storage.local.set({ theme });
     });
 
-  // setTimeout(() => {
-  //   const newVersion = chrome.runtime.getManifest().version;
-  //   versionNumber.textContent = newVersion;
-  //   const showUpdateBar = localStorage.getItem("showUpdateBar");
-  //   if (showUpdateBar !== "false") {
-  //     updateBar.style.display = "block";
-  //   }
-
-  //   closeButton.addEventListener("click", () => {
-  //     updateBar.style.display = "none";
-  //     localStorage.setItem("showUpdateBar", "false");
-  //   });
-  // });
-
   let current = dayjs();
   let currentDate = dayjs().format("ddd MMM DD YYYY");
   let chartInstance = null;
@@ -89,13 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.local.get([selectedDate], (data) => {
       let tabData = data[selectedDate] || {};
       urlList.innerHTML = "";
-
-      // const allDomain = Object.keys(tabData)
-      //   .map((domain) => [domain, tabData[domain].runtime]) // Create pairs [site, runtime]
-      //   .sort() // Sort by runtime in descending order
-      //   .map(([domain]) => domain); // Get the sorted site names
-
-      // console.log(allDomain);
 
       if (Object.keys(tabData).length === 0) {
         totalTimeDisplay.innerHTML = `
@@ -117,26 +104,28 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
         totalRuntime += runtime;
-        function formatTime(milliseconds) {
-          const seconds = Math.floor(milliseconds / 1000) % 60;
-          const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
-          const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        checkAlerts(domain, runtime);
+        // function formatTime(milliseconds) {
+        //   const seconds = Math.floor(milliseconds / 1000) % 60;
+        //   const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+        //   const hours = Math.floor(milliseconds / (1000 * 60 * 60));
 
-          let timeString = "";
+        //   let timeString = "";
 
-          if (hours > 0) {
-            timeString += `${hours}h `;
-          }
+        //   if (hours > 0) {
+        //     timeString += `${hours}h `;
+        //   }
 
-          if (minutes > 0 || hours > 0) {
-            timeString += `${minutes}m `;
-          }
+        //   if (minutes > 0 || hours > 0) {
+        //     timeString += `${minutes}m `;
+        //   }
 
-          timeString += `${seconds}s`;
+        //   timeString += `${seconds}s`;
 
-          return timeString;
-        }
-        const formattedTime = formatTime(runtime);
+        //   return timeString;
+        // }
+        // const formattedTime = formatTime(runtime);
+        const formattedTime = new Date(runtime).toISOString().substr(11, 8);
 
         const domainLogo = getLogoUrl(domain);
 
@@ -161,12 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
 <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; No Data Available
 `;
 
-        // Calculate the total runtime in hours, minutes, seconds
         const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
         const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
         const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
 
-        // Format the total time with leading zeroes if necessary
         const formattedSeconds = totalSeconds.toString().padStart(2, "0");
         const formattedMinutes = totalMinutes.toString().padStart(2, "0");
         const formattedHours = totalHours.toString().padStart(2, "0");
@@ -223,44 +210,56 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       chartInstance = new Chart(ctx, {
-        type: "doughnut",
+        type: "line", // Change this dynamically if needed
         data: {
-          labels: chartLabels,
+          labels: chartLabels, // Domains as X-axis labels
           datasets: [
             {
               label: "Time Spent (minutes)",
               data: chartData,
+              borderColor: "#40c4ff", // Light blue
               backgroundColor: backgroundColors,
-              borderWidth: 1,
-              borderColor: "#ffffff",
+              borderWidth: 2,
+              pointRadius: 5,
+              pointBackgroundColor: "#40c4ff",
+              pointBorderColor: "#fff",
+              fill: true,
             },
           ],
         },
         options: {
           responsive: true,
-          animation: {
-            animateScale: true,
-            animateRotate: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: 10, // Add padding around the chart
           },
-          title: {
-            display: true,
-            text: "Chart.js Doughnut Chart",
+          animation: {
+            duration: 800,
+            easing: "easeInOutQuad",
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#ffffff", // White text for dark mode
+                font: { size: 10, family: "Arial" },
+                maxRotation: 30, // Slightly rotate labels
+                minRotation: 30,
+              },
+            },
+            y: {
+              beginAtZero: true,
+              suggestedMax: Math.max(...chartData) + 10,
+              ticks: {
+                color: "#ffffff",
+                font: { size: 12, family: "Arial" },
+                stepSize: 10,
+              },
+            },
           },
           plugins: {
             legend: {
-              display: false,
-              // position: "left",
-              // maxlength: 10,
-              // labels: {
-              //   font: {
-              //     display: false,
-              //   },
-              //   usePointStyle: true,
-              //   overflow: "wrap",
-              //   padding: 10,
-              // },
+              display: false, // Hide the legend completely
             },
-
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
@@ -272,31 +271,53 @@ document.addEventListener("DOMContentLoaded", () => {
               },
             },
           },
-          elements: {
-            arc: {
-              borderRadius: 1,
-            },
-          },
         },
+      });
+
+      chrome.notifications.create("Daily Summary", {
+        body: `You spent a total of ${Math.floor(
+          totalRuntime / 60000
+        )} minutes online today.`,
       });
     });
     // <h3 class="graphHeading">Graph</h3>;
     const customLegend = document.getElementById("customLegend");
-    customLegend.innerHTML = `
-         <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
-    `;
+    // customLegend.innerHTML = `
+    //      <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
+    // `;
+
+    const chartTypes = ["line", "doughnut", "pie", "bar", "bubble"];
+    let currentChartIndex = 0;
+
+    chrome.storage.local.get("chartType", (data) => {
+      if (data.chartType) {
+        currentChartIndex = chartTypes.indexOf(data.chartType);
+        if (chartInstance) {
+          chartInstance.config.type = data.chartType;
+          chartInstance.update();
+        }
+      }
+    });
 
     grapgBtn.addEventListener("click", function () {
-      console.log(chartInstance.config.type);
-      chartInstance.config.type =
-        chartInstance.config.type === "doughnut" ? "pie" : "doughnut";
+      currentChartIndex = (currentChartIndex + 1) % chartTypes.length;
+      const newChartType = chartTypes[currentChartIndex];
 
-      if (chartInstance.config.type === "doughnut") {
-        grapgBtn.innerHTML = `<i class="fa-solid fa-circle-notch"></i> ${chartInstance.config.type}`;
-      } else {
-        grapgBtn.innerHTML = `<i class="fa-solid fa-circle"></i> ${chartInstance.config.type}`;
+      if (chartInstance) {
+        chartInstance.config.type = newChartType;
+        chartInstance.update();
       }
-      chartInstance.update();
+
+      // Update button text/icon
+      const icons = {
+        doughnut: "fa-circle-notch",
+        pie: "fa-circle",
+        bar: "fa-chart-bar",
+      };
+      grapgBtn.innerHTML = `<i class="fa-solid ${icons[newChartType]}"></i> ${newChartType}`;
+
+      // Save chart type in local storage
+      chrome.storage.local.set({ chartType: newChartType });
     });
   };
 

@@ -89,7 +89,7 @@ ul {
   padding: 35px;
   gap: 3rem;
 }
-.grapgBth {
+.graphBtn {
   padding: 5px;
   background: none;
   color: #fff;
@@ -197,8 +197,7 @@ canvas {
   height: 250px;
   width: 250px;
   cursor: pointer;
-  /* position: relative; */
-  overflow: visible;
+  overflow: hidden;
 }
 
 .btn-arrow {
@@ -345,7 +344,7 @@ body {
 .light-mode .time-container p {
   color: #000;
 }
-.light-mode .grapgBth {
+.light-mode .graphBtn {
   color: #000;
   border: none;
   border: 0.2px solid black;
@@ -415,4 +414,17 @@ body {
 }
 .dark-mode .heading-span {
   color: #dedede;
+}
+#myChart {
+  max-width: 400px;
+  max-height: 400px;
+}
+.delete-data {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 2px;
+  cursor: pointer;
 }

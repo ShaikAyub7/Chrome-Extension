@@ -11,9 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const versionNumber = document.getElementById("versionNumber");
   const closeButton = document.getElementById("closeUpdateBar");
   const themeText = document.querySelector(".themeText");
-  const grapgBtn = document.querySelector(".grapgBth");
-  const alertTimeLimit = {};
-
+  const graphBtn = document.querySelector(".graphBtn");
+  const btnContent = document.querySelector(".btn-content");
+  const deleteBtn = document.querySelector(".delete-data");
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -32,15 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function checkAlerts(domain, runtime) {
-    if (alertTimeLimit[domain] && runtime >= alertTimeLimit[domain]) {
-      new Notification("Time Alert", {
-        body: `You have spent more than ${
-          alertTimeLimit[domain] / 60000
-        } minutes on ${domain}.`,
-      });
-    }
-  }
   chrome.storage.local.get("theme", (data) => {
     const theme =
       data.theme || (prefersDarkScheme ? "dark-mode" : "light-mode");
@@ -81,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedDateElement.innerText = ` ${selectedDate}`;
 
     chrome.storage.local.get([selectedDate], (data) => {
+      console.log(data);
       let tabData = data[selectedDate] || {};
       urlList.innerHTML = "";
 
@@ -104,28 +96,26 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const domain in tabData) {
         const { runtime } = tabData[domain];
         totalRuntime += runtime;
-        checkAlerts(domain, runtime);
-        // function formatTime(milliseconds) {
-        //   const seconds = Math.floor(milliseconds / 1000) % 60;
-        //   const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
-        //   const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        function formatTime(milliseconds) {
+          const seconds = Math.floor(milliseconds / 1000) % 60;
+          const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+          const hours = Math.floor(milliseconds / (1000 * 60 * 60));
 
-        //   let timeString = "";
+          let timeString = "";
 
-        //   if (hours > 0) {
-        //     timeString += `${hours}h `;
-        //   }
+          if (hours > 0) {
+            timeString += `${hours}h `;
+          }
 
-        //   if (minutes > 0 || hours > 0) {
-        //     timeString += `${minutes}m `;
-        //   }
+          if (minutes > 0 || hours > 0) {
+            timeString += `${minutes}m `;
+          }
 
-        //   timeString += `${seconds}s`;
+          timeString += `${seconds}s`;
 
-        //   return timeString;
-        // }
-        // const formattedTime = formatTime(runtime);
-        const formattedTime = new Date(runtime).toISOString().substr(11, 8);
+          return timeString;
+        }
+        const formattedTime = formatTime(runtime);
 
         const domainLogo = getLogoUrl(domain);
 
@@ -163,6 +153,15 @@ document.addEventListener("DOMContentLoaded", () => {
         totalTimeDisplay.innerHTML = `
     <i class="fa-regular fa-clock" ></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
   `;
+
+        deleteBtn.addEventListener("click", function () {
+          chrome.storage.local.remove(selectedDate, function () {
+            const check = confirm("Are you sure you want to delete this data?");
+            if (check) {
+              renderData(selectedDate);
+            }
+          });
+        });
 
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
@@ -210,56 +209,34 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       chartInstance = new Chart(ctx, {
-        type: "line", // Change this dynamically if needed
+        type: "doughnut",
         data: {
-          labels: chartLabels, // Domains as X-axis labels
+          labels: chartLabels,
           datasets: [
             {
               label: "Time Spent (minutes)",
               data: chartData,
-              borderColor: "#40c4ff", // Light blue
               backgroundColor: backgroundColors,
-              borderWidth: 2,
-              pointRadius: 5,
-              pointBackgroundColor: "#40c4ff",
-              pointBorderColor: "#fff",
-              fill: true,
+              borderWidth: 1,
+              borderColor: "#ffffff",
             },
           ],
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          layout: {
-            padding: 10, // Add padding around the chart
-          },
           animation: {
-            duration: 800,
-            easing: "easeInOutQuad",
+            animateScale: true,
+            animateRotate: true,
           },
-          scales: {
-            x: {
-              ticks: {
-                color: "#ffffff", // White text for dark mode
-                font: { size: 10, family: "Arial" },
-                maxRotation: 30, // Slightly rotate labels
-                minRotation: 30,
-              },
-            },
-            y: {
-              beginAtZero: true,
-              suggestedMax: Math.max(...chartData) + 10,
-              ticks: {
-                color: "#ffffff",
-                font: { size: 12, family: "Arial" },
-                stepSize: 10,
-              },
-            },
+          title: {
+            display: true,
+            text: "Chart.js Doughnut Chart",
           },
           plugins: {
             legend: {
-              display: false, // Hide the legend completely
+              display: false,
             },
+
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
@@ -271,22 +248,20 @@ document.addEventListener("DOMContentLoaded", () => {
               },
             },
           },
+          elements: {
+            arc: {
+              borderRadius: 1,
+            },
+          },
         },
       });
-
-      chrome.notifications.create("Daily Summary", {
-        body: `You spent a total of ${Math.floor(
-          totalRuntime / 60000
-        )} minutes online today.`,
-      });
     });
-    // <h3 class="graphHeading">Graph</h3>;
-    const customLegend = document.getElementById("customLegend");
-    // customLegend.innerHTML = `
-    //      <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
-    // `;
 
-    const chartTypes = ["line", "doughnut", "pie", "bar", "bubble"];
+    const customLegend = document.getElementById("customLegend");
+    customLegend.innerHTML = `
+         <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
+    `;
+    const chartTypes = ["doughnut", "pie"];
     let currentChartIndex = 0;
 
     chrome.storage.local.get("chartType", (data) => {
@@ -298,8 +273,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+    chrome.storage.local.get("btnType", (data) => {
+      graphBtn.innerHTML = data.btnType;
+      if (data.btnType === undefined) {
+        graphBtn.innerHTML = `<i class="fa-solid fa-circle-notch"></i> doughnut`;
+      }
+    });
 
-    grapgBtn.addEventListener("click", function () {
+    graphBtn.addEventListener("click", function () {
       currentChartIndex = (currentChartIndex + 1) % chartTypes.length;
       const newChartType = chartTypes[currentChartIndex];
 
@@ -307,17 +288,18 @@ document.addEventListener("DOMContentLoaded", () => {
         chartInstance.config.type = newChartType;
         chartInstance.update();
       }
-
-      // Update button text/icon
       const icons = {
         doughnut: "fa-circle-notch",
         pie: "fa-circle",
-        bar: "fa-chart-bar",
       };
-      grapgBtn.innerHTML = `<i class="fa-solid ${icons[newChartType]}"></i> ${newChartType}`;
-
-      // Save chart type in local storage
-      chrome.storage.local.set({ chartType: newChartType });
+      let btnType = `<i class="fa-solid ${icons[newChartType]}"></i> ${newChartType}`;
+      chrome.storage.local.set({ btnType: btnType });
+      chrome.storage.local.get("btnType", (data) => {
+        graphBtn.innerHTML = data.btnType;
+      });
+      chrome.storage.local.set({
+        chartType: newChartType,
+      });
     });
   };
 
@@ -334,7 +316,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const previousDay = dayjs(current).subtract(1, "day");
     current = previousDay;
     const formattedPreviousDay = previousDay.format("ddd MMM DD YYYY");
-    // document.querySelector(".calender").value = formattedPreviousDay;
 
     if (formattedPreviousDay !== currentDate) {
       next.style.opacity = 1;
@@ -356,9 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
       next.style.opacity = 1;
       next.style.pointerEvents = "auto";
     }
-    //  let calender = document.querySelector(".calender").value;
-    //   calender = formattedNextDay;
-    //   console.log(calender);
+
     renderData(formattedNextDay);
   });
 

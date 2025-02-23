@@ -271,7 +271,6 @@ canvas {
   margin: 0;
   padding-right: 5px;
 }
-/* Custom scrollbar for both modes */
 #tabUrls::-webkit-scrollbar {
   width: 8px;
 }
@@ -313,13 +312,11 @@ canvas {
 .graph-container::-webkit-scrollbar {
   display: none;
 }
-/* ///////////////////////////////////////// */
-/* Default styling for smooth transitions between themes */
+
 body {
   transition: background-color 5s, color 10s;
 }
 
-/* Light mode styles */
 .light-mode .container {
   background-color: white;
   color: black;

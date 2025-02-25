@@ -98,23 +98,12 @@ ul {
   cursor: pointer;
   border-radius: 5px;
 }
-/* .domains {
-  border: 1px solid black;
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  top: 20px;
-} */
 
 .heading {
   font-size: 18px;
   font-weight: 600;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  /* margin-bottom: 5px; */
 }
 .heading-span {
   font-size: 14px;
@@ -126,11 +115,9 @@ ul {
 }
 #tabUrls {
   width: 320px;
-  /* display: grid; */
   height: 330px;
 
   justify-content: space-between;
-  /* font-weight: 500; */
   font-size: 12px;
   margin-top: 20px;
   overflow: scroll;
@@ -146,7 +133,6 @@ ul {
   padding: 8px;
   font-weight: 500;
   overflow: hidden;
-  /* box-shadow: 2px 5px 0.3px rgba(30, 30, 30, 0.05); */
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 .logoConatiner {
@@ -190,7 +176,6 @@ ul {
 .btnContainer {
   display: flex;
   justify-content: space-between;
-  /* padding: 5px; */
   gap: 0.5rem;
 }
 canvas {
@@ -207,7 +192,6 @@ canvas {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  /* background-color: cornflowerblue; */
 }
 
 .todayBtn {
@@ -224,7 +208,6 @@ canvas {
 }
 .logoImg {
   width: 20px;
-  /* margin-top: 15px; */
   height: 15px;
   object-fit: cover;
 }
@@ -329,7 +312,6 @@ body {
 .light-mode .calender {
   color: #000;
 }
-/* Correct for light mode */
 .light-mode .mainContainer {
   background-color: #fafafa;
   border: 1px solid gray;
@@ -380,7 +362,6 @@ body {
   color: rgb(179, 179, 179);
 }
 
-/* Dark mode styles */
 .dark-mode {
   background-color: #121212;
   color: white;
@@ -388,7 +369,6 @@ body {
 
 .dark-mode .mainContainer {
   background-color: #1e1e1e;
-  /* border: 0.3px solid #444; */
 }
 
 .dark-mode .tab-urls {
@@ -405,7 +385,6 @@ body {
 .dark-mode .todayBtn {
   color: #dedede;
 }
-/* Additional button styling */
 .dark-mode .toggle {
   color: #dedede;
 }

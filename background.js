@@ -5,7 +5,6 @@ let intervalId = null;
 function updateTabRuntime(domain, currentTime) {
   const today = new Date().toDateString();
   const elapsedTime = currentTime - lastTimestamp;
-
   chrome.storage.local.get([today], (data) => {
     let tabData = data[today] || {};
 
@@ -16,6 +15,7 @@ function updateTabRuntime(domain, currentTime) {
         tabData[domain] = { runtime: elapsedTime };
       }
 
+      // console.log(elapsedTime);
       chrome.storage.local.set({ [today]: tabData });
     }
   });
@@ -55,6 +55,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete" && tab.url) {
     const currentTime = new Date().getTime();
     const domain = new URL(tab.url).hostname;
+    console.log(currentTime);
 
     if (activeDomain !== null && domain !== activeDomain) {
       updateTabRuntime(activeDomain, currentTime);
@@ -74,22 +75,4 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     activeDomain = null;
     clearInterval(intervalId);
   }
-});
-
-// Trigger notification when the browser starts
-chrome.runtime.onStartup.addListener(() => {
-  const newVersion = chrome.runtime.getManifest().version;
-  chrome.notifications.create({
-    type: "basic",
-    iconUrl: "images/logo3.png",
-    title: "Extension Updated!",
-    message: `New version ${newVersion} is available. Click to see what's new.`,
-    buttons: [{ title: "See what's new" }],
-    requireInteraction: true,
-  });
-});
-
-// Handle the notification button click
-chrome.notifications.onButtonClicked.addListener(() => {
-  chrome.tabs.create({ url: "https://your-update-page-url.com" });
 });

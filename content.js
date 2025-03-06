@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const graphBtn = document.querySelector(".graphBtn");
   const btnContent = document.querySelector(".btn-content");
   const deleteBtn = document.querySelector(".delete-data");
+  const deleteDomain = document.querySelector(".delete-domain");
+
   const prefersDarkScheme = window.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -157,12 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteBtn.addEventListener("click", function () {
           chrome.storage.local.remove(selectedDate, function () {
             const check = confirm("Are you sure you want to delete this data?");
-            if (check) {
-              renderData(selectedDate);
+            if (!check) {
+              return;
             }
+            renderData(selectedDate);
           });
         });
 
+        deleteDomain.addEventListener("click", function () {});
         chartLabels.push(domain);
         chartData.push(runtime / (1000 * 60));
       }

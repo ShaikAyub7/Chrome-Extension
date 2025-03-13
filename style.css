@@ -136,12 +136,13 @@ ul {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 .logoConatiner {
+  position: relative;
   display: flex;
+  align-items: center;
 }
 .logoConatiner img {
   width: 20px;
   margin-right: 5px;
-  margin-top: 7px;
   height: 20px;
 }
 .logoConatiner p {
@@ -160,11 +161,10 @@ ul {
 }
 .domain-container {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   text-transform: capitalize;
   line-height: 2rem;
   font-size: 15px;
-  gap: 2rem;
 }
 
 .time {
@@ -403,4 +403,13 @@ body {
   border-radius: 5px;
   margin-top: 2px;
   cursor: pointer;
+}
+
+/* delete btn by arsalan */
+.logoConatiner span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  font-size: 20px;
 }

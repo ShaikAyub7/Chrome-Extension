@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteDomain = document.querySelector(".delete-domain");
 
   const prefersDarkScheme = window.matchMedia(
-    "(prefers-color-scheme: dark)"
+    "(prefers-color-scheme: dark)",
   ).matches;
 
   function applyTheme(theme) {
@@ -127,12 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class='logoConatiner'>
               <img src="${domainLogo}" alt="Logo" class="domain-logo"
                    onerror="this.onerror=null;this.src='/images/webimg.png';" />
-             <p > <a href="https://${domain}" target="_blank" >${domain}</a> </p>
-            </div>
-          </div>
-          <div class="time-container">
-            <p class='time'> ${formattedTime}</p>
-          </div>
+             <p> <a href="https://${domain}" target="_blank" >${domain}</a> </p>
+             </div>
+             </div>
+             <div class="time-container">
+             <p class='time'> ${formattedTime}</p>
+             </div>
+             <span class="delete-btn">D</span>
            </div>`;
 
         urlList.insertAdjacentHTML("afterbegin", listItem);
@@ -209,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ];
 
       const backgroundColors = chartLabels.map(
-        (_, index) => uniqueColors[index % uniqueColors.length]
+        (_, index) => uniqueColors[index % uniqueColors.length],
       );
 
       chartInstance = new Chart(ctx, {

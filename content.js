@@ -6,65 +6,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
   const totalDomains = document.querySelector(".totalDomains");
-  const toggleButton = document.getElementById("toggleTheme");
-  const updateBar = document.getElementById("updateBar");
-  const versionNumber = document.getElementById("versionNumber");
-  const closeButton = document.getElementById("closeUpdateBar");
-  const themeText = document.querySelector(".themeText");
-  const graphBtn = document.querySelector(".graphBtn");
-  const btnContent = document.querySelector(".btn-content");
-  const deleteBtn = document.querySelector(".delete-data");
-  const deleteDomain = document.querySelector(".delete-domain");
-
-  const prefersDarkScheme = window.matchMedia(
-    "(prefers-color-scheme: dark)",
-  ).matches;
-
-  function applyTheme(theme) {
-    if (theme === "dark-mode") {
-      document.body.classList.remove("light-mode", "dark-mode");
-      document.body.classList.add(theme);
-      toggleButton.checked = true;
-      themeText.textContent = "Dark";
-    } else {
-      document.body.classList.remove("light-mode", "dark-mode");
-      document.body.classList.add(theme);
-      toggleButton.checked = false;
-      themeText.textContent = "Light";
-    }
-  }
-
-  chrome.storage.local.get("theme", (data) => {
-    const theme =
-      data.theme || (prefersDarkScheme ? "dark-mode" : "light-mode");
-    applyTheme(theme);
-  });
-
-  toggleButton.addEventListener("click", () => {
-    const currentTheme = document.body.classList.contains("dark-mode")
-      ? "dark-mode"
-      : "light-mode";
-    const newTheme = currentTheme === "dark-mode" ? "light-mode" : "dark-mode";
-    applyTheme(newTheme);
-
-    chrome.storage.local.set({ theme: newTheme });
-  });
-
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", (e) => {
-      const theme = e.matches ? "dark-mode" : "light-mode";
-      applyTheme(theme);
-      chrome.storage.local.set({ theme });
-    });
+  const customLegend = document.getElementById("customLegend");
+  const dailyLimitSlider = document.getElementById("dailyLimitSlider");
+  const dailyLimitValue = document.getElementById("dailyLimitValue");
 
   let current = dayjs();
   let currentDate = dayjs().format("ddd MMM DD YYYY");
   let chartInstance = null;
 
+  // Load and display stored limit
+  chrome.storage.local.get(["dailyLimitHours"], ({ dailyLimitHours }) => {
+    const limit = dailyLimitHours || 6;
+    dailyLimitSlider.value = limit;
+    dailyLimitValue.textContent = `${limit}h 0m`;
+  });
+
+  dailyLimitSlider.addEventListener("input", () => {
+    const hours = parseInt(dailyLimitSlider.value);
+    chrome.storage.local.set({ dailyLimitHours: hours });
+    dailyLimitValue.textContent = `${hours}h 0m`;
+    renderData(currentDate);
+  });
+
   function getLogoUrl(domain) {
-    return `https://unavatar.io/${domain}
-    `;
+    return `https://unavatar.io/${domain}`;
   }
 
   const renderData = (selectedDate) => {
@@ -73,108 +38,84 @@ document.addEventListener("DOMContentLoaded", () => {
     const chartData = [];
     selectedDateElement.innerText = ` ${selectedDate}`;
 
-    chrome.storage.local.get([selectedDate], (data) => {
-      console.log(data);
+    chrome.storage.local.get([selectedDate, "dailyLimitHours"], (data) => {
       let tabData = data[selectedDate] || {};
+      const limitHours = data.dailyLimitHours || 6;
+      const limitMs = limitHours * 60 * 60 * 1000;
+
       urlList.innerHTML = "";
+      customLegend.innerHTML = "";
 
       if (Object.keys(tabData).length === 0) {
-        totalTimeDisplay.innerHTML = `
-    <i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; 00:00:00
-  `;
+        totalTimeDisplay.innerHTML = `<i class="fa-regular fa-clock"></i>&nbsp; 00:00:00`;
         urlList.innerHTML = "<li>No data available.</li>";
-        totalDomains.innerHTML = `
-    Opened Websites : 0
-        `;
+        totalDomains.innerHTML = `Opened Websites : 0`;
         return;
       }
+
       const totalDomain = Object.keys(tabData).length;
-      if (totalDomain !== 0) {
-        totalDomains.innerHTML = `
-           Opened Websites : ${totalDomain}
- 
-        `;
-      }
+      totalDomains.innerHTML = `Opened Websites : ${totalDomain}`;
+
+      // calculate total
       for (const domain in tabData) {
-        const { runtime } = tabData[domain];
-        totalRuntime += runtime;
-        function formatTime(milliseconds) {
-          const seconds = Math.floor(milliseconds / 1000) % 60;
-          const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
-          const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        totalRuntime += tabData[domain].runtime;
+      }
 
-          let timeString = "";
-
-          if (hours > 0) {
-            timeString += `${hours}h `;
-          }
-
-          if (minutes > 0 || hours > 0) {
-            timeString += `${minutes}m `;
-          }
-
-          timeString += `${seconds}s`;
-
-          return timeString;
-        }
-        const formattedTime = formatTime(runtime);
-
+      for (const domain in tabData) {
+        const { runtime, sessions = 1 } = tabData[domain];
         const domainLogo = getLogoUrl(domain);
 
-        const listItem = ` 
-        <div class='mainContainer'>
-          <div class="tab-urls">
-            <div class='logoConatiner'>
-              <img src="${domainLogo}" alt="Logo" class="domain-logo"
-                   onerror="this.onerror=null;this.src='/images/webimg.png';" />
-             <p> <a href="https://${domain}" target="_blank" >${domain}</a> </p>
-             </div>
-             </div>
-             <div class="time-container">
-             <p class='time'> ${formattedTime}</p>
-             </div>
-             <span class="delete-btn">D</span>
-           </div>`;
+        const percent = ((runtime / totalRuntime) * 100).toFixed(0);
+        const sessionCount = sessions;
+        const siteHours = Math.floor(runtime / (1000 * 60 * 60));
+        const siteMinutes = Math.floor((runtime / (1000 * 60)) % 60);
+        const siteSeconds = Math.floor((runtime / 1000) % 60);
 
-        urlList.insertAdjacentHTML("afterbegin", listItem);
+        const displayTime = `${siteHours ? `${siteHours}h` : ""} ${
+          siteMinutes ? `${siteMinutes}m` : ""
+        } ${siteSeconds}s
+         `;
 
-        totalTimeDisplay.classList.add("totalTimeDisplay");
-        totalTimeDisplay.innerHTML = `
-<i class="fa-regular fa-clock" style="color: #dedede;"></i>&nbsp; No Data Available
-`;
+        const listItem = `
+        <div class="site-usage-box">
+          <div class="site-info">
+            <img src="${domainLogo}" alt="${domain}" class="site-logo"
+                 onerror="this.onerror=null;this.src='/images/webimg.png';" />
+            <div class="site-meta">
+              <div class="site-domain">
+                <a href="https://${domain}" target="_blank">${domain}</a>
+              </div>
+              <div class="site-sessions">${sessionCount} session(s)</div>
+            </div>
+            <div class="site-duration">${displayTime}</div>
+          </div>
+          <div class="site-progress">
+            <div class="site-bar">
+              <div class="site-bar-fill" style="width: ${percent}%"></div>
+            </div>
+            <div class="site-percent">${percent}%</div>
+          </div>
+        </div>
+        `;
 
-        const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
-        const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
-        const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
-
-        const formattedSeconds = totalSeconds.toString().padStart(2, "0");
-        const formattedMinutes = totalMinutes.toString().padStart(2, "0");
-        const formattedHours = totalHours.toString().padStart(2, "0");
-
-        totalTimeDisplay.classList.add("totalTimeDisplay");
-
-        totalTimeDisplay.innerHTML = `
-    <i class="fa-regular fa-clock" ></i>&nbsp; ${formattedHours}:${formattedMinutes}:${formattedSeconds}
-  `;
-
-        deleteBtn.addEventListener("click", function () {
-          chrome.storage.local.remove(selectedDate, function () {
-            const check = confirm("Are you sure you want to delete this data?");
-            if (!check) {
-              return;
-            }
-            renderData(selectedDate);
-          });
-        });
-
-        deleteDomain.addEventListener("click", function () {});
+        urlList.insertAdjacentHTML("beforeend", listItem);
         chartLabels.push(domain);
-        chartData.push(runtime / (1000 * 60));
+        chartData.push(runtime / (1000 * 60)); // minutes
       }
+
+      // Show total time spent
+      const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
+      const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
+      const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
+      totalTimeDisplay.innerHTML = `<i class="fa-regular fa-clock"></i>&nbsp; ${String(
+        totalHours,
+      ).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}:${String(
+        totalSeconds,
+      ).padStart(2, "0")}`;
+
+      // Create donut chart
       const ctx = document.getElementById("myChart").getContext("2d");
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
+      if (chartInstance) chartInstance.destroy();
 
       const uniqueColors = [
         "#e63946",
@@ -197,21 +138,34 @@ document.addEventListener("DOMContentLoaded", () => {
         "#f94144",
         "#43aa8b",
         "#f3722c",
-        "#90be6d",
-        "#577590",
-        "#ff6f61",
-        "#2d6a4f",
-        "#9d0208",
-        "#007f5f",
-        "#8338ec",
-        "#ffbe0b",
-        "#00b4d8",
-        "#9b5de5",
       ];
 
       const backgroundColors = chartLabels.map(
-        (_, index) => uniqueColors[index % uniqueColors.length],
+        (_, i) => uniqueColors[i % uniqueColors.length],
       );
+
+      const centerTextPlugin = {
+        id: "centerText",
+        beforeDraw(chart) {
+          const { width } = chart;
+          const { top, bottom } = chart.chartArea;
+          const ctx = chart.ctx;
+          ctx.save();
+          const totalMinutes = chart.data.datasets[0].data.reduce(
+            (a, b) => a + b,
+            0,
+          );
+          const hours = Math.floor(totalMinutes / 60);
+          const minutes = Math.floor(totalMinutes % 60);
+          const text = `${hours}h ${minutes}min`;
+          ctx.font = "bold 18px sans-serif";
+          ctx.fillStyle = "#333";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(text, width / 2, (top + bottom) / 2);
+          ctx.restore();
+        },
+      };
 
       chartInstance = new Chart(ctx, {
         type: "doughnut",
@@ -222,26 +176,18 @@ document.addEventListener("DOMContentLoaded", () => {
               label: "Time Spent (minutes)",
               data: chartData,
               backgroundColor: backgroundColors,
-              borderWidth: 1,
+              borderWidth: 1.5,
+              borderRadius: 6,
               borderColor: "#ffffff",
             },
           ],
         },
         options: {
           responsive: true,
-          animation: {
-            animateScale: true,
-            animateRotate: true,
-          },
-          title: {
-            display: true,
-            text: "Chart.js Doughnut Chart",
-          },
+          animation: false,
+          cutout: "65%",
           plugins: {
-            legend: {
-              display: false,
-            },
-
+            legend: { display: false },
             tooltip: {
               callbacks: {
                 label: function (tooltipItem) {
@@ -253,104 +199,60 @@ document.addEventListener("DOMContentLoaded", () => {
               },
             },
           },
-          elements: {
-            arc: {
-              borderRadius: 1,
-            },
-          },
         },
+        plugins: [centerTextPlugin],
       });
-    });
 
-    const customLegend = document.getElementById("customLegend");
-    customLegend.innerHTML = `
-         <small class='graphText' >This graph shows the time you've spent on different websites everyday. Each color represents a specific domain, with larger slices indicating more time spent. Hover over a section to see the exact time spent on that site in hours and minutes.</small>
-    `;
-    const chartTypes = ["doughnut", "pie"];
-    let currentChartIndex = 0;
-
-    chrome.storage.local.get("chartType", (data) => {
-      if (data.chartType) {
-        currentChartIndex = chartTypes.indexOf(data.chartType);
-        if (chartInstance) {
-          chartInstance.config.type = data.chartType;
-          chartInstance.update();
+      // Render custom legend
+      const totalChartMinutes = chartData.reduce((a, b) => a + b, 0);
+      chartLabels.forEach((label, i) => {
+        const minutes = chartData[i];
+        const hours = Math.floor(minutes / 60);
+        const mins = Math.floor(minutes % 60);
+        const percent = ((minutes / totalChartMinutes) * 100).toFixed(0);
+        const color = backgroundColors[i];
+        if (percent > 10) {
+          customLegend.innerHTML += `
+          <div style="display:flex;flex-direction:column;justify-content:center;margin:4px 0;font-size:12px;font-weight:600">
+            <div style="display:flex;align-items:center;">
+              <span style="width:10px;height:10px;background:${color};border-radius:20%;margin-right:8px"></span>
+              <span>${label}</span></div>
+            &nbsp; ${percent}% • ${hours ? `${hours}h ` : ""}${
+            mins ? `${mins}m` : ""
+          }
+          </div>`;
         }
-      }
-    });
-    chrome.storage.local.get("btnType", (data) => {
-      graphBtn.innerHTML = data.btnType;
-      if (data.btnType === undefined) {
-        graphBtn.innerHTML = `<i class="fa-solid fa-circle-notch"></i> doughnut`;
-      }
-    });
-
-    graphBtn.addEventListener("click", function () {
-      currentChartIndex = (currentChartIndex + 1) % chartTypes.length;
-      const newChartType = chartTypes[currentChartIndex];
-
-      if (chartInstance) {
-        chartInstance.config.type = newChartType;
-        chartInstance.update();
-      }
-      const icons = {
-        doughnut: "fa-circle-notch",
-        pie: "fa-circle",
-      };
-      let btnType = `<i class="fa-solid ${icons[newChartType]}"></i> ${newChartType}`;
-      chrome.storage.local.set({ btnType: btnType });
-      chrome.storage.local.get("btnType", (data) => {
-        graphBtn.innerHTML = data.btnType;
-      });
-      chrome.storage.local.set({
-        chartType: newChartType,
       });
     });
   };
-
   renderData(currentDate);
+  // setInterval(() => renderData(currentDate), 100);
 
-  todayDate.addEventListener("click", () => {
-    if (todayDate === today) {
-      next.style.opacity = 0.3;
-      next.style.pointerEvents = "none";
-    }
-    renderData(currentDate);
-  });
+  todayDate.addEventListener("click", () => renderData(currentDate));
+
   previous.addEventListener("click", () => {
-    const previousDay = dayjs(current).subtract(1, "day");
-    current = previousDay;
-    const formattedPreviousDay = previousDay.format("ddd MMM DD YYYY");
-
-    if (formattedPreviousDay !== currentDate) {
-      next.style.opacity = 1;
-      next.style.pointerEvents = "auto";
-    }
-    renderData(formattedPreviousDay);
+    current = dayjs(current).subtract(1, "day");
+    const formatted = current.format("ddd MMM DD YYYY");
+    next.style.opacity = 1;
+    next.style.pointerEvents = "auto";
+    renderData(formatted);
   });
 
   next.addEventListener("click", () => {
-    const nextDay = dayjs(current).add(1, "day");
-    current = nextDay;
-
-    const formattedNextDay = nextDay.format("ddd MMM DD YYYY");
-    console.log(formattedNextDay);
-    if (formattedNextDay === currentDate) {
+    current = dayjs(current).add(1, "day");
+    const formatted = current.format("ddd MMM DD YYYY");
+    if (formatted === currentDate) {
       next.style.opacity = 0.3;
       next.style.pointerEvents = "none";
     } else {
       next.style.opacity = 1;
       next.style.pointerEvents = "auto";
     }
-
-    renderData(formattedNextDay);
+    renderData(formatted);
   });
 
   if (currentDate === dayjs().format("ddd MMM DD YYYY")) {
     next.style.opacity = 0.3;
     next.style.pointerEvents = "none";
-  } else {
-    next.style.opacity = 1;
-    next.style.pointerEvents = "auto";
   }
 });

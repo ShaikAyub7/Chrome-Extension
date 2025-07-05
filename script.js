@@ -1,4 +1,3 @@
-console.log("hello");
 const form = document.querySelector("form");
 
 form.addEventListener("submit", async function (e) {
@@ -13,5 +12,4 @@ form.addEventListener("submit", async function (e) {
 
     body: JSON.stringify({ name: "New Task", workspace: "YOUR_WORKSPACE_ID" }),
   });
-  console.log(name);
 });

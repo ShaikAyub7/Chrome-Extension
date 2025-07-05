@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Tab Time Tracker</title>
-    <script src="content.js"></script>
+    <script defer type="module" src="content.js"></script>
     <link rel="stylesheet" href="/style.css" />
     <script src="./node_modules/chart.js/dist/chart.umd.js"></script>
     <script src="./node_modules/dayjs/dayjs.min.js"></script>
@@ -15,8 +15,8 @@
     />
   </head>
   <body>
-    <div class="container">
-      <div class="domains">
+    <main class="container">
+      <section class="domains">
         <div class="HeadingContainer">
           <h3 class="heading">
             Tab Time Tracker -<span class="heading-span">
@@ -24,6 +24,7 @@
             >
           </h3>
         </div>
+
         <p id="data"></p>
         <div class="date-container">
           <div class="totalTimeDisplay"></div>
@@ -51,20 +52,60 @@
             <p class="todayBtn" id="today">View Today</p>
           </div>
         </div>
-        <div id="tabUrls"></div>
+        <!--  -->
+        <div id="tabUrls">
+          <!-- <div class="mainContainer">
+            <div class="tab-urls">
+              <div class="logoConatiner">
+                <img
+                  src="${domainLogo}"
+                  alt="Logo"
+                  class="domain-logo"
+                  onerror="this.onerror=null;this.src='/images/webimg.png';"
+                />
+                <p><a href="https://${domain}" target="_blank">${domain}</a></p>
+              </div>
+            </div>
+            <div class="time-container">
+              <p class="time">${formattedTime}</p>
+            </div>
+          </div> -->
+        </div>
+        <!--  -->
         <div style="display: flex; justify-content: space-between">
           <div class="totalDomains"></div>
           <button class="delete-data">clear all data</button>
           <button class="delete-domain">delete</button>
         </div>
-      </div>
-      <div class="graph-container">
+      </section>
+
+      <section class="graph-container">
         <canvas id="myChart"></canvas>
-        <button class="graphBtn">
-          <i class="fa-solid fa-circle-notch"></i> doughnut
-        </button>
+
         <div id="customLegend"></div>
-      </div>
-    </div>
+        <p id="usageDisplay" style="margin: 0.5rem 0; font-weight: bold"></p>
+
+        <!-- Daily Limit Control -->
+        <div style="margin-top: 1rem">
+          <label for="dailyLimitSlider" style="font-weight: bold"
+            >Set Daily Limit</label
+          >
+          <input
+            type="range"
+            id="dailyLimitSlider"
+            min="0"
+            max="12"
+            value="1"
+          />
+          <span id="dailyLimitValue">6h 0m</span>
+          <p id="usageDisplay" style="font-weight: bold"></p>
+        </div>
+      </section>
+      <!-- <div class="daily-limit-container">
+        <label for="dailyLimitSlider">Set Daily Limit</label>
+        <input type="range" id="dailyLimitSlider" min="1" max="12" value="6" />
+        <span id="dailyLimitValue">6h 0m</span>
+      </div> -->
+    </main>
   </body>
 </html>

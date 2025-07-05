@@ -15,7 +15,6 @@ function updateTabRuntime(domain, currentTime) {
         tabData[domain] = { runtime: elapsedTime };
       }
 
-      // console.log(elapsedTime);
       chrome.storage.local.set({ [today]: tabData });
     }
   });

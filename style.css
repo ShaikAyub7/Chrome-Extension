@@ -11,7 +11,7 @@
   --secondar-bgcolor: #fafafa;
 }
 html {
-  font-size: 62.5%;
+  font-size: 68.5%;
 }
 
 body {
@@ -168,6 +168,14 @@ ul {
 
 .logoConatiner a:hover {
   color: rgb(171, 210, 233);
+}
+
+.domains {
+  background: #fff;
+  padding: 30px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 4px 6px;
+
+  border-radius: 16px;
 }
 .domain-container {
   display: flex;
@@ -441,12 +449,16 @@ body {
 }
 /*  */
 .site-usage-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: #f9f9f9;
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   font-family: sans-serif;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 2px 3px;
+  border: 0.2px solid rgb(210, 210, 210);
 }
 
 .site-info {
@@ -457,10 +469,10 @@ body {
 }
 
 .site-logo {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 38px;
+  object-fit: cover;
   border-radius: 6px;
-  margin-right: 10px;
 }
 
 .site-meta {
@@ -491,6 +503,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: 10px;
 }
 
 .site-bar {
@@ -498,13 +511,16 @@ body {
   background: #e0e0e0;
   flex-grow: 1;
   border-radius: 5px;
+
   overflow: hidden;
 }
 
 .site-bar-fill {
   height: 100%;
   background-color: #111;
+  width: 0;
   border-radius: 5px;
+  transition: width 0.6s ease;
 }
 
 .site-percent {
@@ -512,4 +528,12 @@ body {
   color: #444;
   min-width: 35px;
   text-align: right;
+}
+.calendar-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  color: inherit;
 }

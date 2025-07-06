@@ -1,20 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
-  const next = document.getElementById("nextDay");
-  const previous = document.getElementById("previousDay");
+  const calendar = document.getElementById("calendarInput");
   const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
   const totalDomains = document.querySelector(".totalDomains");
   const customLegend = document.getElementById("customLegend");
   const dailyLimitSlider = document.getElementById("dailyLimitSlider");
   const dailyLimitValue = document.getElementById("dailyLimitValue");
+  const deleteBtn = document.querySelector(".delete-data");
 
   let current = dayjs();
-  let currentDate = dayjs().format("ddd MMM DD YYYY");
   let chartInstance = null;
 
-  // Load and display stored limit
   chrome.storage.local.get(["dailyLimitHours"], ({ dailyLimitHours }) => {
     const limit = dailyLimitHours || 6;
     dailyLimitSlider.value = limit;
@@ -25,7 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const hours = parseInt(dailyLimitSlider.value);
     chrome.storage.local.set({ dailyLimitHours: hours });
     dailyLimitValue.textContent = `${hours}h 0m`;
-    renderData(currentDate);
+    renderData(current.format("ddd MMM DD YYYY"));
+  });
+
+  calendar.addEventListener("change", (e) => {
+    current = dayjs(e.target.value);
+    renderData(current.format("ddd MMM DD YYYY"));
   });
 
   function getLogoUrl(domain) {
@@ -36,12 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalRuntime = 0;
     const chartLabels = [];
     const chartData = [];
-    selectedDateElement.innerText = ` ${selectedDate}`;
 
+    selectedDateElement.innerText = ` ${selectedDate}`;
     chrome.storage.local.get([selectedDate, "dailyLimitHours"], (data) => {
       let tabData = data[selectedDate] || {};
       const limitHours = data.dailyLimitHours || 6;
-      const limitMs = limitHours * 60 * 60 * 1000;
 
       urlList.innerHTML = "";
       customLegend.innerHTML = "";
@@ -56,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const totalDomain = Object.keys(tabData).length;
       totalDomains.innerHTML = `Opened Websites : ${totalDomain}`;
 
-      // calculate total
       for (const domain in tabData) {
         totalRuntime += tabData[domain].runtime;
       }
@@ -64,56 +65,61 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const domain in tabData) {
         const { runtime, sessions = 1 } = tabData[domain];
         const domainLogo = getLogoUrl(domain);
-
-        const percent = ((runtime / totalRuntime) * 100).toFixed(0);
-        const sessionCount = sessions;
+        const percent = (
+          (runtime / (limitHours * 60 * 60 * 1000)) *
+          100
+        ).toFixed(0);
         const siteHours = Math.floor(runtime / (1000 * 60 * 60));
         const siteMinutes = Math.floor((runtime / (1000 * 60)) % 60);
         const siteSeconds = Math.floor((runtime / 1000) % 60);
 
-        const displayTime = `${siteHours ? `${siteHours}h` : ""} ${
-          siteMinutes ? `${siteMinutes}m` : ""
-        } ${siteSeconds}s
-         `;
+        const displayTime = `${siteHours ? `${siteHours}h ` : ""}${
+          siteMinutes ? `${siteMinutes}m ` : ""
+        }${siteSeconds}s`;
+        const safePercent = Math.min(percent, 100);
 
         const listItem = `
         <div class="site-usage-box">
-          <div class="site-info">
+          <div style="display:flex;justify-content:center;align-items:center">
             <img src="${domainLogo}" alt="${domain}" class="site-logo"
-                 onerror="this.onerror=null;this.src='/images/webimg.png';" />
-            <div class="site-meta">
-              <div class="site-domain">
-                <a href="https://${domain}" target="_blank">${domain}</a>
+              onerror="this.onerror=null;this.src='/images/webimg.png';" />
+          </div>
+          <div style="width:100%;display:flex;flex-direction:column;justify-content:center;">
+            <div class="site-info">
+              <div class="site-meta">
+                <div class="site-domain">
+                  <a href="https://${domain}" target="_blank">${domain}</a>
+                </div>
               </div>
-              <div class="site-sessions">${sessionCount} session(s)</div>
+              <div class="site-duration">${displayTime}</div>
             </div>
-            <div class="site-duration">${displayTime}</div>
-          </div>
-          <div class="site-progress">
-            <div class="site-bar">
-              <div class="site-bar-fill" style="width: ${percent}%"></div>
+            <div class="site-progress">
+              <div class="site-bar">
+                <div class="site-bar-fill" style="width: ${safePercent}%"></div>
+              </div>
             </div>
-            <div class="site-percent">${percent}%</div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px;  margin-left: 10px;">
+              <div class="site-sessions">${sessions} session(s)</div>
+              <div class="site-percent">${percent}%</div>
+            </div>
           </div>
-        </div>
-        `;
-
+        </div>`;
         urlList.insertAdjacentHTML("beforeend", listItem);
         chartLabels.push(domain);
-        chartData.push(runtime / (1000 * 60)); // minutes
+        chartData.push(runtime / (1000 * 60));
       }
 
-      // Show total time spent
       const totalSeconds = Math.floor(totalRuntime / 1000) % 60;
       const totalMinutes = Math.floor(totalRuntime / (1000 * 60)) % 60;
       const totalHours = Math.floor(totalRuntime / (1000 * 60 * 60));
+
       totalTimeDisplay.innerHTML = `<i class="fa-regular fa-clock"></i>&nbsp; ${String(
-        totalHours,
+        totalHours
       ).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}:${String(
-        totalSeconds,
+        totalSeconds
       ).padStart(2, "0")}`;
 
-      // Create donut chart
+      // Chart setup
       const ctx = document.getElementById("myChart").getContext("2d");
       if (chartInstance) chartInstance.destroy();
 
@@ -139,9 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "#43aa8b",
         "#f3722c",
       ];
-
       const backgroundColors = chartLabels.map(
-        (_, i) => uniqueColors[i % uniqueColors.length],
+        (_, i) => uniqueColors[i % uniqueColors.length]
       );
 
       const centerTextPlugin = {
@@ -153,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.save();
           const totalMinutes = chart.data.datasets[0].data.reduce(
             (a, b) => a + b,
-            0,
+            0
           );
           const hours = Math.floor(totalMinutes / 60);
           const minutes = Math.floor(totalMinutes % 60);
@@ -203,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
         plugins: [centerTextPlugin],
       });
 
-      // Render custom legend
       const totalChartMinutes = chartData.reduce((a, b) => a + b, 0);
       chartLabels.forEach((label, i) => {
         const minutes = chartData[i];
@@ -213,46 +217,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const color = backgroundColors[i];
         if (percent > 10) {
           customLegend.innerHTML += `
-          <div style="display:flex;flex-direction:column;justify-content:center;margin:4px 0;font-size:12px;font-weight:600">
-            <div style="display:flex;align-items:center;">
-              <span style="width:10px;height:10px;background:${color};border-radius:20%;margin-right:8px"></span>
-              <span>${label}</span></div>
-            &nbsp; ${percent}% • ${hours ? `${hours}h ` : ""}${
+            <div style="display:flex;flex-direction:column;justify-content:center;margin:4px 0;font-size:12px;font-weight:600">
+              <div style="display:flex;align-items:center;">
+                <span style="width:10px;height:10px;background:${color};border-radius:20%;margin-right:8px"></span>
+                <span>${label}</span></div>
+              &nbsp; ${percent}% • ${hours ? `${hours}h ` : ""}${
             mins ? `${mins}m` : ""
           }
-          </div>`;
+            </div>`;
         }
       });
     });
   };
-  renderData(currentDate);
-  // setInterval(() => renderData(currentDate), 100);
 
-  todayDate.addEventListener("click", () => renderData(currentDate));
+  renderData(current.format("ddd MMM DD YYYY"));
+  setInterval(() => {
+    const liveDate = current.format("ddd MMM DD YYYY");
+    renderData(liveDate);
+  }, 1000);
 
-  previous.addEventListener("click", () => {
-    current = dayjs(current).subtract(1, "day");
-    const formatted = current.format("ddd MMM DD YYYY");
-    next.style.opacity = 1;
-    next.style.pointerEvents = "auto";
-    renderData(formatted);
+  // todayDate.addEventListener("click", () => {
+  //   current = dayjs();
+  //   renderData(current.format("ddd MMM DD YYYY"));
+  // });
+
+  deleteBtn.addEventListener("click", function () {
+    const selected = current.format("ddd MMM DD YYYY");
+    const check = confirm("Are you sure you want to delete this data?");
+    if (!check) return;
+    chrome.storage.local.remove(selected, () => {
+      renderData(selected);
+    });
   });
-
-  next.addEventListener("click", () => {
-    current = dayjs(current).add(1, "day");
-    const formatted = current.format("ddd MMM DD YYYY");
-    if (formatted === currentDate) {
-      next.style.opacity = 0.3;
-      next.style.pointerEvents = "none";
-    } else {
-      next.style.opacity = 1;
-      next.style.pointerEvents = "auto";
-    }
-    renderData(formatted);
-  });
-
-  if (currentDate === dayjs().format("ddd MMM DD YYYY")) {
-    next.style.opacity = 0.3;
-    next.style.pointerEvents = "none";
-  }
 });

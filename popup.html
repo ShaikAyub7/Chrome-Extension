@@ -37,45 +37,15 @@
             </label>
           </div>
         </div>
-        <div class="btnContainer">
-          <div class="btn">
-            <button id="previousDay" class="btn-arrow">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
+        <div class="btn" style="gap: 1rem; align-items: center">
+          <input type="date" id="calendarInput" />
+          <h4 id="selectedDate"></h4>
+        </div>
 
-            <h4 id="selectedDate"></h4>
-            <button id="nextDay" class="btn-arrow">
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-          <div class="viewTodayBtnContainer">
-            <p class="todayBtn" id="today">View Today</p>
-          </div>
-        </div>
-        <!--  -->
-        <div id="tabUrls">
-          <!-- <div class="mainContainer">
-            <div class="tab-urls">
-              <div class="logoConatiner">
-                <img
-                  src="${domainLogo}"
-                  alt="Logo"
-                  class="domain-logo"
-                  onerror="this.onerror=null;this.src='/images/webimg.png';"
-                />
-                <p><a href="https://${domain}" target="_blank">${domain}</a></p>
-              </div>
-            </div>
-            <div class="time-container">
-              <p class="time">${formattedTime}</p>
-            </div>
-          </div> -->
-        </div>
-        <!--  -->
+        <div id="tabUrls"></div>
         <div style="display: flex; justify-content: space-between">
           <div class="totalDomains"></div>
           <button class="delete-data">clear all data</button>
-          <button class="delete-domain">delete</button>
         </div>
       </section>
 
@@ -85,27 +55,16 @@
         <div id="customLegend"></div>
         <p id="usageDisplay" style="margin: 0.5rem 0; font-weight: bold"></p>
 
-        <!-- Daily Limit Control -->
         <div style="margin-top: 1rem">
           <label for="dailyLimitSlider" style="font-weight: bold"
             >Set Daily Limit</label
           >
-          <input
-            type="range"
-            id="dailyLimitSlider"
-            min="0"
-            max="12"
-            value="1"
-          />
+          <input type="range" id="dailyLimitSlider" min="1  " max="12" />
+
           <span id="dailyLimitValue">6h 0m</span>
           <p id="usageDisplay" style="font-weight: bold"></p>
         </div>
       </section>
-      <!-- <div class="daily-limit-container">
-        <label for="dailyLimitSlider">Set Daily Limit</label>
-        <input type="range" id="dailyLimitSlider" min="1" max="12" value="6" />
-        <span id="dailyLimitValue">6h 0m</span>
-      </div> -->
     </main>
   </body>
 </html>

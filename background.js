@@ -5,18 +5,19 @@ let intervalId = null;
 function updateTabRuntime(domain, currentTime) {
   const today = new Date().toDateString();
   const elapsedTime = currentTime - lastTimestamp;
+
+  if (elapsedTime <= 0) return;
+
   chrome.storage.local.get([today], (data) => {
     let tabData = data[today] || {};
 
-    if (elapsedTime > 0) {
-      if (tabData[domain]) {
-        tabData[domain].runtime += elapsedTime;
-      } else {
-        tabData[domain] = { runtime: elapsedTime };
-      }
-
-      chrome.storage.local.set({ [today]: tabData });
+    if (tabData[domain]) {
+      tabData[domain].runtime += elapsedTime;
+    } else {
+      tabData[domain] = { runtime: elapsedTime };
     }
+
+    chrome.storage.local.set({ [today]: tabData });
   });
 }
 
@@ -24,54 +25,63 @@ function startTrackingTime() {
   if (intervalId) clearInterval(intervalId);
 
   intervalId = setInterval(() => {
-    if (activeDomain) {
-      const currentTime = new Date().getTime();
-      updateTabRuntime(activeDomain, currentTime);
-      lastTimestamp = currentTime;
-    }
+    if (!activeDomain) return;
+    const currentTime = Date.now();
+    updateTabRuntime(activeDomain, currentTime);
+    lastTimestamp = currentTime;
   }, 100);
 }
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
-  const currentTime = new Date().getTime();
+  const currentTime = Date.now();
 
-  if (activeDomain !== null) {
+  if (activeDomain) {
     updateTabRuntime(activeDomain, currentTime);
   }
 
   chrome.tabs.get(activeInfo.tabId, (tab) => {
-    if (tab && tab.url) {
+    if (tab && tab.url && tab.active) {
       const domain = new URL(tab.url).hostname;
       activeDomain = domain;
       lastTimestamp = currentTime;
-
       startTrackingTime();
     }
   });
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete" && tab.url) {
-    const currentTime = new Date().getTime();
-    const domain = new URL(tab.url).hostname;
-    console.log(currentTime);
+  if (changeInfo.status !== "complete" || !tab.url) return;
 
-    if (activeDomain !== null && domain !== activeDomain) {
-      updateTabRuntime(activeDomain, currentTime);
-    }
+  const currentTime = Date.now();
+  const domain = new URL(tab.url).hostname;
 
-    activeDomain = domain;
-    lastTimestamp = currentTime;
-    startTrackingTime();
+  if (activeDomain && domain !== activeDomain) {
+    updateTabRuntime(activeDomain, currentTime);
   }
+
+  activeDomain = domain;
+  lastTimestamp = currentTime;
+  startTrackingTime();
 });
 
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-  const currentTime = new Date().getTime();
+chrome.tabs.onRemoved.addListener(() => {
+  const currentTime = Date.now();
 
-  if (activeDomain !== null) {
+  if (activeDomain) {
     updateTabRuntime(activeDomain, currentTime);
     activeDomain = null;
     clearInterval(intervalId);
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "CLOSE_TAB") {
+    if (sender.tab && sender.tab.id) {
+      chrome.tabs.remove(sender.tab.id);
+    } else {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id) chrome.tabs.remove(tabs[0].id);
+      });
+    }
   }
 });

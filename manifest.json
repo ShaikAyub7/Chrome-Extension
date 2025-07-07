@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Tab Time Tracker",
   "description": "Tab Time Tracker is a simple and intuitive Browser extension that helps you monitor your daily browsing habits.",
-  "version": "1.5.0",
+  "version": "2.1.0",
   "permissions": ["storage", "activeTab", "scripting", "tabs", "notifications"],
   "background": {
     "service_worker": "background.js"

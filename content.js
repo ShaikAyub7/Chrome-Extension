@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let chartInstance = null;
 
   function getLogoUrl(domain) {
+    console.log(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   }
 
@@ -101,7 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="site-usage-box">
           <div style="display:flex;justify-content:center;align-items:center">
             <img src="${getLogoUrl(domain)}" alt="${domain}" class="site-logo"
-            onerror="this.onerror=null;this.src='https://unavatar.io/${domain}'" />
+            onerror="this.onerror=null;this.src='https://unavatar.io/${domain}'" /
+            >
           </div>
           <div style="width:100%;display:flex;flex-direction:column;justify-content:center;">
             <div class="site-info">

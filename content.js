@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dailyLimitSlider = document.getElementById("dailyLimitSlider");
   const dailyLimitValue = document.getElementById("dailyLimitValue");
   const deleteBtn = document.querySelector(".delete-data");
-
+  const limitText = document.querySelector(".limit-text ");
   let current = dayjs();
   let chartInstance = null;
 
@@ -48,10 +48,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const minutes = (limitHours % 1) * 60;
 
     document.querySelector(".percentage-text").textContent = `${percent}%`;
-    document.querySelector(".limit-text").innerHTML = `
+    if (percent === 100) {
+      limitText.classList.add("red");
+      limitText.innerHTML = `
       <p>Daily limit:</p>
       <strong>${percent}%</strong> of ${hours}h ${minutes.toFixed(0)}m
     `;
+    } else if (percent < 100) {
+      limitText.innerHTML = `
+      <p>Daily limit:</p>
+      <strong>${percent}%</strong> of ${hours}h ${minutes.toFixed(0)}m
+    `;
+    }
+
+    if (percent === 100) {
+      document.querySelector(".alert").innerHTML = `
+      you exceed your limit ${percent}%`;
+    } else {
+      document.querySelector(".alert").classList.add("hidden");
+    }
     document
       .querySelector(".circle")
       ?.setAttribute("stroke-dasharray", `${percent}, 100`);

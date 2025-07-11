@@ -64,24 +64,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   startTrackingTime();
 });
 
-chrome.tabs.onRemoved.addListener(() => {
-  const currentTime = Date.now();
+// chrome.tabs.onRemoved.addListener(() => {
+//   const currentTime = Date.now();
 
-  if (activeDomain) {
-    updateTabRuntime(activeDomain, currentTime);
-    activeDomain = null;
-    clearInterval(intervalId);
-  }
-});
+//   if (activeDomain) {
+//     updateTabRuntime(activeDomain, currentTime);
+//     activeDomain = null;
+//     clearInterval(intervalId);
+//   }
+// });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "CLOSE_TAB") {
-    if (sender.tab && sender.tab.id) {
-      chrome.tabs.remove(sender.tab.id);
-    } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id) chrome.tabs.remove(tabs[0].id);
-      });
-    }
-  }
-});
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.type === "CLOSE_TAB") {
+//     if (sender.tab && sender.tab.id) {
+//       chrome.tabs.remove(sender.tab.id);
+//     } else {
+//       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//         if (tabs[0]?.id) chrome.tabs.remove(tabs[0].id);
+//       });
+//     }
+//   }
+// });

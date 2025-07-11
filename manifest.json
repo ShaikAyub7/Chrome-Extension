@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tab Time Tracker(v2)",
+  "name": "Tab Time Tracker",
   "description": "Tab Time Tracker is a simple and intuitive  extension that helps you monitor your daily browsing habits.",
   "version": "2.1.0",
   "permissions": ["storage", "activeTab", "scripting", "tabs", "notifications"],

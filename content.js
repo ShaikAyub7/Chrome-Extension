@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
   const calendar = document.getElementById("calendarInput");
-  const todayDate = document.getElementById("today");
+  // const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
   const totalDomains = document.querySelector(".totalDomains");
   const customLegend = document.getElementById("customLegend");
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dailyLimitValue = document.getElementById("dailyLimitValue");
   const deleteBtn = document.querySelector(".delete-data");
   const limitText = document.querySelector(".limit-text ");
+
   let current = dayjs();
   let chartInstance = null;
 

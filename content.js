@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
   const calendar = document.getElementById("calendarInput");
-  // const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
   const totalDomains = document.querySelector(".totalDomains");
   const customLegend = document.getElementById("customLegend");

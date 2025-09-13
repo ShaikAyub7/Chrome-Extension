@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalLimitMs = limitHours * 60 * 60 * 1000;
     const percent = Math.min(
       ((runtimeMs / totalLimitMs) * 100).toFixed(0),
-      100
+      100,
     );
 
     const hours = Math.floor(limitHours);
@@ -160,9 +160,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "#f94144",
         "#43aa8b",
         "#f3722c",
+        "#222",
       ];
       const backgroundColors = chartLabels.map(
-        (_, i) => uniqueColors[i % uniqueColors.length]
+        (_, i) => uniqueColors[i % uniqueColors.length],
       );
 
       const centerTextPlugin = {
@@ -176,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.save();
           const totalMinutes = chart.data.datasets[0].data.reduce(
             (a, b) => a + b,
-            0
+            0,
           );
           const hours = Math.floor(totalMinutes / 60);
           const minutes = Math.floor(totalMinutes % 60);
@@ -187,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.fillText(
             `${hours}h ${minutes}min`,
             width / 2,
-            (top + bottom) / 2
+            (top + bottom) / 2,
           );
           ctx.restore();
         },

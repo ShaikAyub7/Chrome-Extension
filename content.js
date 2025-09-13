@@ -2,18 +2,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlList = document.getElementById("tabUrls");
   const selectedDateElement = document.getElementById("selectedDate");
   const calendar = document.getElementById("calendarInput");
-  const todayDate = document.getElementById("today");
   const totalTimeDisplay = document.querySelector(".totalTimeDisplay");
   const totalDomains = document.querySelector(".totalDomains");
   const customLegend = document.getElementById("customLegend");
   const dailyLimitSlider = document.getElementById("dailyLimitSlider");
   const dailyLimitValue = document.getElementById("dailyLimitValue");
   const deleteBtn = document.querySelector(".delete-data");
+  const limitText = document.querySelector(".limit-text ");
 
   let current = dayjs();
   let chartInstance = null;
 
   function getLogoUrl(domain) {
+    console.log(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   }
 
@@ -46,10 +48,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const minutes = (limitHours % 1) * 60;
 
     document.querySelector(".percentage-text").textContent = `${percent}%`;
-    document.querySelector(".limit-text").innerHTML = `
+    if (percent === 100) {
+      limitText.classList.add("red");
+      limitText.innerHTML = `
       <p>Daily limit:</p>
       <strong>${percent}%</strong> of ${hours}h ${minutes.toFixed(0)}m
     `;
+    } else if (percent < 100) {
+      limitText.innerHTML = `
+      <p>Daily limit:</p>
+      <strong>${percent}%</strong> of ${hours}h ${minutes.toFixed(0)}m
+    `;
+    }
+
+    if (percent === 100) {
+      document.querySelector(".alert").innerHTML = `
+      you exceed your limit ${percent}%`;
+    } else {
+      document.querySelector(".alert").classList.add("hidden");
+    }
     document
       .querySelector(".circle")
       ?.setAttribute("stroke-dasharray", `${percent}, 100`);
@@ -101,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="site-usage-box">
           <div style="display:flex;justify-content:center;align-items:center">
             <img src="${getLogoUrl(domain)}" alt="${domain}" class="site-logo"
-            onerror="this.onerror=null;this.src='https://unavatar.io/${domain}'" />
+            onerror="this.onerror=null;this.src='https://unavatar.io/${domain}'" /
+            >
           </div>
           <div style="width:100%;display:flex;flex-direction:column;justify-content:center;">
             <div class="site-info">

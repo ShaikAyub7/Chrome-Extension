@@ -146,7 +146,5 @@ Issues and pull requests are welcome. If you're proposing a larger change, pleas
 
 ---
 
-## 📄 License
 
-*Add a `LICENSE` file to this repo to specify how others may use this project (MIT is a common, permissive choice for extensions like this). Until then, all rights are reserved by default.*
 

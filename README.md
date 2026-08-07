@@ -146,5 +146,7 @@ Issues and pull requests are welcome. If you're proposing a larger change, pleas
 
 ---
 
+## 📄 License
 
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) — anyone may use, modify, and share this project for **noncommercial purposes**. Selling it, or any modified version of it, is not permitted.s
 

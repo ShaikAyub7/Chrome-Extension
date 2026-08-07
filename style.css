@@ -1963,3 +1963,7 @@ input:checked + .slider:before {
     transform: rotate(360deg);
   }
 }
+.website-url{
+  text-decoration: none;
+  color: var(--text-primary);
+}

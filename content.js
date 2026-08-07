@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function initApp() {
     setupTabs();
+    setupTheme();
     setupSlider();
     setupCalendar();
     setupDeleteBtn();
@@ -41,6 +42,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (btn.dataset.tab === "settings") renderSettings();
         if (btn.dataset.tab === "focus") renderFocus();
       });
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // THEME
+  // ═══════════════════════════════════════════════════════════════════════════
+  function setupTheme() {
+    const toggle = document.getElementById("toggleTheme");
+    chrome.storage.local.get("theme", ({ theme }) => {
+      const dark = theme === "dark";
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "");
+      if (toggle) toggle.checked = dark;
+    });
+    toggle?.addEventListener("change", () => {
+      const dark = toggle.checked;
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "");
+      chrome.storage.local.set({ theme: dark ? "dark" : "light" });
     });
   }
 

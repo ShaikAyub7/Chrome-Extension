@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function initApp() {
     setupTabs();
+    setupTheme();
     setupSlider();
     setupCalendar();
     setupDeleteBtn();
@@ -41,6 +42,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (btn.dataset.tab === "settings") renderSettings();
         if (btn.dataset.tab === "focus") renderFocus();
       });
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // THEME
+  // ═══════════════════════════════════════════════════════════════════════════
+  function setupTheme() {
+    const toggle = document.getElementById("toggleTheme");
+    chrome.storage.local.get("theme", ({ theme }) => {
+      const dark = theme === "dark";
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "");
+      if (toggle) toggle.checked = dark;
+    });
+    toggle?.addEventListener("change", () => {
+      const dark = toggle.checked;
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "");
+      chrome.storage.local.set({ theme: dark ? "dark" : "light" });
     });
   }
 
@@ -120,7 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           const { runtime = 0, sessions = 1 } = filtered[domain];
           total += runtime;
           const pct = Math.min(Math.round((runtime / limitMs) * 100), 100);
-          const short = domain.length > 28 ? domain.slice(0, 28) + "…" : domain;
+          const short = domain.length > 28 ? domain.slice(0, 28) + "..." : domain;
           urlList.insertAdjacentHTML(
             "beforeend",
             `
@@ -245,12 +263,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (pct <= 5) return;
       const h = Math.floor(data[i] / 60),
         m = Math.floor(data[i] % 60);
-      const short = label.length > 12 ? label.slice(0, 12) + "…" : label;
+      const short = label.length > 12 ? label.slice(0, 12) + "..." : label;
       legend.innerHTML += `<div style="display:flex;flex-direction:column;font-size:1.1rem;font-weight:500">
         <div style="display:flex;align-items:center;gap:5px">
           <span style="width:8px;height:8px;background:${colors[i]};border-radius:50%"></span>
           <span title="${label}">${short}</span></div>
-        <span style="color:var(--text-muted);padding-left:13px">${pct}%·${h ? h + "h " : ""}${m}m</span></div>`;
+        <span style="color:var(--text-muted);padding-left:13px">${pct}% - ${h ? h + "h " : ""}${m}m</span></div>`;
     });
   }
 
@@ -404,7 +422,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="leaderboard-item">
         <span class="lb-rank">${i + 1}</span>
         <img class="lb-logo" src="${logoUrl(dom)}" alt="" onerror="this.src='https://unavatar.io/${dom}'"/>
-        <span class="lb-domain" title="${dom}">${dom.length > 22 ? dom.slice(0, 22) + "…" : dom}</span>
+        <span class="lb-domain" title="${dom}">${dom.length > 22 ? dom.slice(0, 22) + "..." : dom}</span>
         <span class="lb-time">${fmtMsShort(ms)}</span>
       </div>`,
       )
@@ -480,7 +498,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("pomoStart").innerHTML =
         '<i class="fa-solid fa-pause"></i> Pause';
       document.getElementById("pomoTimer").className = "pomo-timer running";
-      setPomoStatus("running", "Focus session running…");
+      setPomoStatus("running", "Focus session running...");
       chrome.storage.local.get("blockSites", ({ blockSites }) => {
         chrome.storage.local.set({
           focusMode: {
@@ -865,7 +883,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `https://www.google.com/s2/favicons?domain=${d}&sz=64`;
   }
 });
-
-// ═══════════════════════════════════════════════════════════════════════════
-// AI FEATURES
-// ═══════════════════════════════════════════════════════════════════════════

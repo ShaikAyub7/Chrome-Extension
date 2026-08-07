@@ -1,12 +1,12 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8" />
     <title>Tab Time Tracker</title>
-    <script defer type="module" src="content.js"></script>
-    <link rel="stylesheet" href="/style.css" />
-    <script src="./node_modules/chart.js/dist/chart.umd.js"></script>
-    <script src="./node_modules/dayjs/dayjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./features.css" />
+    <script src="./lib/chart.umd.js"></script>
+    <script src="./lib/dayjs.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -20,121 +20,359 @@
     />
   </head>
   <body>
-    <main class="container">
-      <section class="domains">
-        <!-- <div class="HeadingContainer">
-          <h3 class="heading">
-            Tab Time Tracker -<span class="heading-span">
-              Browsing Insights</span
-            >
-          </h3>
-        </div> -->
-
-        <!-- <p id="data"></p> -->
-        <!-- <div class="darklightDiv">
-            <p class="themeText"></p>
-            <label class="switch">
-              <input type="checkbox" id="toggleTheme" />
-
-              <span class="slider round"></span>
-            </label>
-          </div> -->
-        <div class="summary-bar">
-          <div class="heading">
-            <h3>Summary</h3>
+    <!-- ══════════════════════════════════════════════════════
+       MAIN APP
+  ══════════════════════════════════════════════════════ -->
+    <div id="appScreen">
+      <div class="app-shell">
+        <!-- Header -->
+        <header class="app-header">
+          <div class="app-title">
+            <img src="./images/image.png" class="app-logo" />
+            Tab Time Tracker
           </div>
-          <div class="date-bar">
-            <h4 id="selectedDate"></h4>
+          <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="summary">
+              <i class="fa-solid fa-chart-pie"></i> Summary
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+              <i class="fa-solid fa-chart-line"></i> Analytics
+            </button>
+            <button class="tab-btn" data-tab="focus">
+              <i class="fa-solid fa-crosshairs"></i> Focus
+            </button>
+            <button class="tab-btn" data-tab="settings">
+              <i class="fa-solid fa-gear"></i> Settings
+            </button>
+          </nav>
+        </header>
 
-            <div class="btn" style="gap: 1rem; align-items: center">
-              <label class="calendar-wrapper">
-                <input type="date" id="calendarInput" />
-              </label>
-            </div>
-            <!-- <div class="more-btn">
-              <i class="fa-solid fa-ellipsis-vertical"></i>
-            </div> -->
-          </div>
-        </div>
-        <div class="navigation-bar">
-          <div class="date-container">
-            <div class="totalTimeDisplay"></div>
-          </div>
-          <div class="border"></div>
-          <div class="totalTimeLimit">
-            <div class="daily-limit-progress">
-              <div class="circle-container">
-                <svg viewBox="0 0 36 36" class="circular-chart">
-                  <path
-                    class="circle-bg"
-                    d="M18 2.0845
-           a 15.9155 15.9155 0 0 1 0 31.831
-           a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    class="circle"
-                    stroke-dasharray="72, 100"
-                    d="M18 2.0845
-           a 15.9155 15.9155 0 0 1 0 31.831
-           a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <text x="18" y="20.35" class="percentage-text">72%</text>
-                </svg>
+        <!-- ── SUMMARY TAB ── -->
+        <div id="tab-summary" class="tab-panel active">
+          <div class="two-col">
+            <section class="panel domains-panel">
+              <div class="summary-bar">
+                <div class="heading"><h3>Summary</h3></div>
+                <div class="date-bar">
+                  <h4 id="selectedDate"></h4>
+                  <div class="btn">
+                    <label class="calendar-wrapper"
+                      ><input type="date" id="calendarInput"
+                    /></label>
+                  </div>
+                </div>
               </div>
-              <div class="limit-text">
-                <p>Daily limit:</p>
-                <br />
-                <strong></strong> of 6h 30m
+              <div class="navigation-bar">
+                <div class="date-container">
+                  <div class="totalTimeDisplay"></div>
+                </div>
+                <div class="border"></div>
+                <div class="totalTimeLimit">
+                  <div class="daily-limit-progress">
+                    <div class="circle-container">
+                      <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path
+                          class="circle-bg"
+                          d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path
+                          class="circle"
+                          stroke-dasharray="0,100"
+                          d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <text x="18" y="20.35" class="percentage-text">0%</text>
+                      </svg>
+                    </div>
+                    <div class="limit-text">
+                      <p>Daily limit:</p>
+                      <strong id="limitDisplay"></strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="streak-bar">
+                <span id="streakBadge" class="streak-badge"
+                  ><i class="fa-solid fa-fire"></i> 0 day streak</span
+                >
+                <span id="goalStatus" class="goal-status"></span>
+              </div>
+              <div id="tabUrls"></div>
+              <div class="bottom-bar">
+                <div class="totalDomains"></div>
+                <button class="delete-data">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </section>
+
+            <section class="panel right-panel">
+              <div class="graph-container">
+                <canvas id="myChart"></canvas>
+                <div id="customLegend"></div>
+              </div>
+              <div class="heatmap-card">
+                <div class="card-label">Activity - last 35 days</div>
+                <div id="heatmapGrid" class="heatmap-grid"></div>
+                <div class="heatmap-legend">
+                  <span>Less</span>
+                  <div class="heatmap-swatch s0"></div>
+                  <div class="heatmap-swatch s1"></div>
+                  <div class="heatmap-swatch s2"></div>
+                  <div class="heatmap-swatch s3"></div>
+                  <div class="heatmap-swatch s4"></div>
+                  <span>More</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- ── ANALYTICS TAB ── -->
+        <div id="tab-analytics" class="tab-panel hidden">
+          <div class="analytics-layout">
+            <div class="period-row">
+              <button class="period-btn active" data-period="7">
+                Last 7 days
+              </button>
+              <button class="period-btn" data-period="30">Last 30 days</button>
+            </div>
+            <div class="analytics-grid">
+              <div class="panel">
+                <div class="card-label">Daily usage</div>
+                <canvas id="analyticsChart" style="max-height: 160px"></canvas>
+              </div>
+              <div class="panel">
+                <div class="card-label">Top sites</div>
+                <div id="leaderboard"></div>
+              </div>
+            </div>
+            <div class="panel" style="margin-top: 12px">
+              <div class="card-label">Productivity breakdown</div>
+              <div class="prod-row">
+                <div class="prod-score-box">
+                  <div class="prod-score-num" id="prodScore">-</div>
+                  <div class="prod-score-label">score</div>
+                </div>
+                <div class="prod-bars" id="prodBars"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="tabUrls"></div>
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <div class="totalDomains"></div>
-          <button class="delete-data"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      </section>
+        <!-- ── FOCUS TAB ── -->
+        <div id="tab-focus" class="tab-panel hidden">
+          <div class="two-col">
+            <div class="panel">
+              <div class="card-label">Pomodoro Timer</div>
+              <div class="pomodoro-box">
+                <div class="pomo-timer" id="pomoTimer">25:00</div>
+                <div class="pomo-preset-row">
+                  <button class="pomo-preset active" data-min="25">25m</button>
+                  <button class="pomo-preset" data-min="45">45m</button>
+                  <button class="pomo-preset" data-min="60">60m</button>
+                </div>
+                <div class="pomo-btn-row">
+                  <button class="btn-primary" id="pomoStart">
+                    <i class="fa-solid fa-play"></i> Start
+                  </button>
+                  <button class="btn-secondary" id="pomoReset">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                  </button>
+                </div>
+                <div class="pomo-status" id="pomoStatus">Ready to focus</div>
+              </div>
+              <div class="card-label" style="margin-top: 16px">
+                Block during focus
+              </div>
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="blockSiteInput"
+                  placeholder="e.g. youtube.com"
+                  class="text-input"
+                />
+                <button class="btn-add" id="addBlockSite">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <ul class="tag-list" id="blockSiteList"></ul>
+            </div>
+            <div class="panel">
+              <div class="card-label">Per-site time limits</div>
+              <p class="card-hint">Notified when you hit a site's cap</p>
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="siteLimitDomain"
+                  placeholder="domain.com"
+                  class="text-input"
+                  style="flex: 2"
+                />
+                <input
+                  type="number"
+                  id="siteLimitMin"
+                  placeholder="min"
+                  class="text-input num-input"
+                  min="1"
+                  max="480"
+                />
+                <button class="btn-add" id="addSiteLimit">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <ul class="site-limit-list" id="siteLimitList"></ul>
+              <div class="card-label" style="margin-top: 16px">
+                Scheduled limits
+              </div>
+              <p class="card-hint">Stricter limit during work hours</p>
+              <div class="schedule-box">
+                <div class="schedule-row">
+                  <label>Limit during work</label
+                  ><input
+                    type="number"
+                    id="workLimitHours"
+                    placeholder="hrs"
+                    class="text-input num-input"
+                    min="1"
+                    max="12"
+                  />
+                </div>
+                <div class="schedule-row">
+                  <label>Work start</label
+                  ><input
+                    type="time"
+                    id="workStart"
+                    class="text-input time-input"
+                    value="09:00"
+                  />
+                </div>
+                <div class="schedule-row">
+                  <label>Work end</label
+                  ><input
+                    type="time"
+                    id="workEnd"
+                    class="text-input time-input"
+                    value="17:00"
+                  />
+                </div>
+                <button
+                  class="btn-primary"
+                  id="saveSchedule"
+                  style="margin-top: 10px; width: 100%"
+                >
+                  <i class="fa-solid fa-floppy-disk"></i> Save schedule
+                </button>
+                <div class="schedule-status" id="scheduleStatus"></div>
+              </div>
 
-      <section class="graph-section">
-        <div class="graph-container">
-          <canvas id="myChart"></canvas>
-
-          <div id="customLegend"></div>
-          <p id="usageDisplay" style="margin: 0.5rem 0; font-weight: bold"></p>
-        </div>
-
-        <div class="slider-card">
-          <label for="dailyLimitSlider" class="slider-label"
-            >Set Daily Limit</label
-          >
-          <div class="slider-wrapper">
-            <input
-              type="range"
-              id="dailyLimitSlider"
-              min="1"
-              max="12"
-              step="1"
-            />
-            <div class="slider-marks">
-              <span>1h</span>
-              <span>6h</span>
-              <span>12h</span>
+              <div class="card-label" style="margin-top: 16px">
+                Cursor time alert
+              </div>
+              <p class="card-hint">
+                Cursor glows red and blinks faster as a site or your daily
+                limit gets close - so you notice even when you've drifted
+                off task.
+              </p>
+              <div class="schedule-row">
+                <label for="cursorAlertToggle">Enable cursor alert</label>
+                <label class="switch">
+                  <input type="checkbox" id="cursorAlertToggle" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
             </div>
           </div>
-          <span id="dailyLimitValue" class="slider-value">6h 0m</span>
         </div>
-      </section>
-      <div class="alert"></div>
-      <div class="version">v3.1.0</div>
-    </main>
-    <script src="./main.js"></script>
+
+        <!-- ── SETTINGS TAB ── -->
+        <div id="tab-settings" class="tab-panel hidden">
+          <div class="settings-grid">
+            <div class="panel">
+              <div class="card-label">Daily limit &amp; streak</div>
+              <div class="slider-wrapper">
+                <input
+                  type="range"
+                  id="dailyLimitSlider"
+                  min="1"
+                  max="12"
+                  step="1"
+                />
+                <div class="slider-marks">
+                  <span>1h</span><span>6h</span><span>12h</span>
+                </div>
+              </div>
+              <span id="dailyLimitValue" class="slider-value">6h</span>
+              <div class="streak-display">
+                <div class="streak-num" id="streakCount">0</div>
+                <div class="streak-label">
+                  <i class="fa-solid fa-fire"></i> day streak
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="card-label">Ignore list</div>
+              <p class="card-hint">These sites won't be tracked</p>
+              <div class="input-row">
+                <input
+                  type="text"
+                  id="ignoreInput"
+                  placeholder="e.g. localhost"
+                  class="text-input"
+                />
+                <button class="btn-add" id="addIgnore">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <ul class="tag-list" id="ignoreList"></ul>
+            </div>
+
+            <div class="panel">
+              <div class="card-label">Site labels</div>
+              <p class="card-hint">Label sites for productivity score</p>
+              <div id="siteLabels" class="site-labels-list"></div>
+            </div>
+
+            <div class="panel">
+              <div class="card-label">Export data</div>
+              <p class="card-hint">Download your full browsing history</p>
+              <div class="export-btns">
+                <button class="btn-primary" id="exportCSV">
+                  <i class="fa-solid fa-file-csv"></i> CSV
+                </button>
+                <button class="btn-secondary" id="exportJSON">
+                  <i class="fa-solid fa-file-code"></i> JSON
+                </button>
+              </div>
+              <button
+                class="btn-danger"
+                id="clearAllData"
+                style="margin-top: 10px; width: 100%"
+              >
+                <i class="fa-solid fa-trash"></i> Clear all data
+              </button>
+            </div>
+
+            <div class="panel full-width">
+              <div class="card-label">Sync &amp; Presets</div>
+              <div id="syncPanel"></div>
+            </div>
+
+            <div class="panel full-width">
+              <div class="card-label">Google Calendar Integration</div>
+              <div id="calendarPanel"></div>
+            </div>
+          </div>
+        </div>
+        <!-- ── AI TAB ── -->
+      </div>
+    </div>
+    <!-- /#appScreen -->
+
+    <div class="alert hidden" id="alertBox"></div>
+    <div class="version">v3.4.6</div>
+
+    <script src="./script.js"></script>
+    <script type="module" src="./features.js"></script>
   </body>
 </html>

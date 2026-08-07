@@ -1,30 +1,64 @@
 {
   "manifest_version": 3,
   "name": "Tab Time Tracker",
-  "description": "Tab Time Tracker is a simple and intuitive  extension that helps you monitor your daily browsing habits.",
-  "version": "3.1.0",
-  "permissions": ["storage", "activeTab", "scripting", "tabs", "notifications"],
+  "description": "Monitor your daily browsing habits. See time spent per site, set daily limits, and boost your productivity.",
+  "version": "4.0.0",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "notifications",
+    "alarms",
+    "identity"
+  ],
+  "oauth2": {
+    "client_id": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/calendar.readonly"]
+  },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["components/cursor-alert.js"],
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["images/image.png"],
+      "resources": [
+        "images/*",
+        "lib/*",
+        "components/*.js",
+        "features.js",
+        "features.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "images/image.png",
+      "48":  "images/image.png",
+      "128": "images/image.png"
+    }
   },
   "icons": {
-    "16": "images/image.png",
-    "48": "images/image.png",
+    "16":  "images/image.png",
+    "48":  "images/image.png",
     "128": "images/image.png"
-  }
+  },
+  "host_permissions": [
+    "https://www.googleapis.com/*",
+    "https://accounts.google.com/*"
+  ]
 }

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="images/banner.png" alt="Tab Time Tracker banner" width="100%" />
+<img src="docs/banner.png" alt="Tab Time Tracker banner" width="100%" />
 
 # Tab Time Tracker
 
@@ -11,6 +11,7 @@ A lightweight, privacy-first browser extension that tracks your time per site, w
 [![Get it from Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft%20Edge-Add--ons-0078D7?logo=microsoftedge&logoColor=white&style=for-the-badge)](#-install-from-the-microsoft-edge-add-ons-store)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-4f46e5?style=for-the-badge)](manifest.json)
 [![Privacy-first](https://img.shields.io/badge/Privacy-Local%20Only-22c55e?style=for-the-badge)](#-privacy)
+[![License: PolyForm Noncommercial](https://img.shields.io/badge/License-Noncommercial-orange.svg?style=for-the-badge)](LICENSE)
 
 </div>
 
@@ -62,8 +63,7 @@ A lightweight, privacy-first browser extension that tracks your time per site, w
 
 The easiest way to get Tab Time Tracker:
 
-1. Open the [Tab Time Tracker listing on the Microsoft Edge Add-ons store](
-https://microsoftedge.microsoft.com/addons/detail/aoecofhfffbfnkekppdgicmnfjmfdmoe) *(replace this link with your published listing URL once it's live)*.
+1. Open the [Tab Time Tracker listing on the Microsoft Edge Add-ons store](#) *(replace this link with your published listing URL once it's live)*.
 2. Click **Get** (or **Add to Microsoft Edge**).
 3. Confirm the permissions prompt by clicking **Add extension**.
 4. Pin it for easy access: click the puzzle-piece **Extensions** icon in Edge's toolbar, then click the pin next to **Tab Time Tracker**.
@@ -79,7 +79,7 @@ Works in Edge, Chrome, Brave, and other Chromium-based browsers.
 
 1. **Download** this repository — click **Code → Download ZIP** on GitHub, or:
    ```bash
-   git clone https://github.com/ShaikAyub7/Chrome-Extension.git
+   git clone https://github.com/<your-username>/<your-repo>.git
    ```
 2. **Unzip** it if needed, so you have a plain folder containing `manifest.json`.
 3. Open your browser's extensions page:
@@ -148,5 +148,7 @@ Issues and pull requests are welcome. If you're proposing a larger change, pleas
 
 ## 📄 License
 
-Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) — anyone may use, modify, and share this project for **noncommercial purposes**. Selling it, or any modified version of it, is not permitted.s
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) — anyone may use, modify, and share this project for **noncommercial purposes**. Selling it, or any modified version of it, is not permitted.
+
+> Before publishing, open `LICENSE` and replace `[Your Name or Organization]` (in two places) with your actual name or org.
 

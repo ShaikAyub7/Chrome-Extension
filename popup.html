@@ -29,86 +29,116 @@
         <header class="app-header">
           <div class="app-title">
             <img src="./images/image.png" class="app-logo" />
-            Tab Time Tracker
+            <a
+              href="https://tab-time-tracker.vercel.app"
+              target="_blank"
+              class="app-title-link"
+            >
+              Tab Time Tracker
+            </a>
           </div>
-          <nav class="tab-nav">
-            <button class="tab-btn active" data-tab="summary">
-              <i class="fa-solid fa-chart-pie"></i> Summary
+          <div class="header-controls">
+            <nav class="tab-nav">
+              <button class="tab-btn active" data-tab="summary">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span class="tab-label"> Summary </span>
+              </button>
+              <button class="tab-btn" data-tab="analytics">
+                <i class="fa-solid fa-chart-line"></i>
+                <span class="tab-label">Analytics</span>
+              </button>
+              <button class="tab-btn" data-tab="focus">
+                <i class="fa-solid fa-crosshairs"></i>
+                <span class="tab-label"> Focus</span>
+              </button>
+              <button class="tab-btn" data-tab="settings">
+                <i class="fa-solid fa-gear"></i>
+                <span class="tab-label">Settings</span>
+              </button>
+            </nav>
+            <button
+              id="openDashboard"
+              class="dashboard-link-btn"
+              title="Open full dashboard"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </button>
-            <button class="tab-btn" data-tab="analytics">
-              <i class="fa-solid fa-chart-line"></i> Analytics
-            </button>
-            <button class="tab-btn" data-tab="focus">
-              <i class="fa-solid fa-crosshairs"></i> Focus
-            </button>
-            <button class="tab-btn" data-tab="settings">
-              <i class="fa-solid fa-gear"></i> Settings
-            </button>
-          </nav>
+          </div>
         </header>
 
         <!-- ── SUMMARY TAB ── -->
         <div id="tab-summary" class="tab-panel active">
           <div class="two-col">
-            <section class="panel domains-panel">
-              <div class="summary-bar">
-                <div class="heading"><h3>Summary</h3></div>
-                <div class="date-bar">
-                  <h4 id="selectedDate"></h4>
-                  <div class="btn">
-                    <label class="calendar-wrapper"
-                      ><input type="date" id="calendarInput"
-                    /></label>
+            <div>
+              <section class="panel domains-panel">
+                <div class="summary-bar">
+                  <div class="heading"><h3>Summary</h3></div>
+                  <div class="date-bar">
+                    <h4 id="selectedDate"></h4>
+                    <div class="btn">
+                      <label class="calendar-wrapper"
+                        ><input type="date" id="calendarInput"
+                      /></label>
+                    </div>
                   </div>
+                </div>
+                <div class="navigation-bar">
+                  <div class="date-container">
+                    <div class="totalTimeDisplay"></div>
+                  </div>
+                  <div class="border"></div>
+                  <div class="totalTimeLimit">
+                    <div class="daily-limit-progress">
+                      <div class="circle-container">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                          <path
+                            class="circle-bg"
+                            d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            class="circle"
+                            stroke-dasharray="0,100"
+                            d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <text x="18" y="20.35" class="percentage-text">
+                            0%
+                          </text>
+                        </svg>
+                      </div>
+                      <div class="limit-text">
+                        <p>Daily limit:</p>
+                        <strong id="limitDisplay"></strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <div class="top-sites">
+                <div class="top-sites-title">
+                <p>Top sites</p>
+
+                </div>
+                <div id="tabUrls"></div>
+                <div class="bottom-bar">
+                  <div class="totalDomains"></div>
+                  <button class="delete-data">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
                 </div>
               </div>
-              <div class="navigation-bar">
-                <div class="date-container">
-                  <div class="totalTimeDisplay"></div>
-                </div>
-                <div class="border"></div>
-                <div class="totalTimeLimit">
-                  <div class="daily-limit-progress">
-                    <div class="circle-container">
-                      <svg viewBox="0 0 36 36" class="circular-chart">
-                        <path
-                          class="circle-bg"
-                          d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-                        />
-                        <path
-                          class="circle"
-                          stroke-dasharray="0,100"
-                          d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-                        />
-                        <text x="18" y="20.35" class="percentage-text">0%</text>
-                      </svg>
-                    </div>
-                    <div class="limit-text">
-                      <p>Daily limit:</p>
-                      <strong id="limitDisplay"></strong>
-                    </div>
-                  </div>
-                </div>
+            </div>
+
+            <section class="panel right-panel">
+              <div class="graph-container">
+                <canvas id="myChart"></canvas>
+
+                <!-- <div id="customLegend"></div> -->
               </div>
               <div class="streak-bar">
                 <span id="streakBadge" class="streak-badge"
                   ><i class="fa-solid fa-fire"></i> 0 day streak</span
                 >
                 <span id="goalStatus" class="goal-status"></span>
-              </div>
-              <div id="tabUrls"></div>
-              <div class="bottom-bar">
-                <div class="totalDomains"></div>
-                <button class="delete-data">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </section>
-
-            <section class="panel right-panel">
-              <div class="graph-container">
-                <canvas id="myChart"></canvas>
-                <div id="customLegend"></div>
               </div>
               <div class="heatmap-card">
                 <div class="card-label">Activity - last 35 days</div>
@@ -269,9 +299,8 @@
                 Cursor time alert
               </div>
               <p class="card-hint">
-                Cursor glows red and blinks faster as a site or your daily
-                limit gets close - so you notice even when you've drifted
-                off task.
+                Cursor glows red and blinks faster as a site or your daily limit
+                gets close - so you notice even when you've drifted off task.
               </p>
               <div class="schedule-row">
                 <label for="cursorAlertToggle">Enable cursor alert</label>
@@ -376,13 +405,14 @@
             </div>
           </div>
         </div>
+
         <!-- ── AI TAB ── -->
       </div>
     </div>
     <!-- /#appScreen -->
 
     <div class="alert hidden" id="alertBox"></div>
-    <div class="version">v3.4.6</div>
+    <div class="version">v3.4.8</div>
 
     <script src="./script.js"></script>
     <script type="module" src="./features.js"></script>

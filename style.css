@@ -131,6 +131,32 @@ a:hover {
   gap: 6px;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-link-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.dashboard-link-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent-stroke);
+}
+
 .tab-nav {
   display: flex;
   gap: 4px;
@@ -182,7 +208,7 @@ a:hover {
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 8px;
 }
 
 .card-label {
@@ -204,6 +230,7 @@ a:hover {
 /* ═══════════════════════════ SUMMARY TAB ═══════════════════════════ */
 .domains-panel {
   flex: 0 0 340px;
+  gap: 3px;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
@@ -216,6 +243,14 @@ a:hover {
     rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   gap: 12px;
+}
+.top-sites{
+  background: var(--bg-panel);
+  padding: 8px;
+  margin-top: 2px;
+  border-radius: 14px;
+
+
 }
 
 .summary-bar {
@@ -381,6 +416,9 @@ a:hover {
   padding: 0px 8px;
   overflow-x: hidden;
 }
+.top-sites-title{
+  padding: 4px;
+}
 
 #tabUrls::-webkit-scrollbar {
   width: 4px;
@@ -537,56 +575,65 @@ html::-webkit-scrollbar-thumb {
 
 /* Heatmap */
 .heatmap-card {
+   width: fit-content;
+  min-width: 320px;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 14px;
+  padding: 18px;
+  overflow: hidden;
 }
-
 .heatmap-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
-  margin: 8px 0;
+  grid-template-columns: repeat(12, 24px);
+  grid-auto-rows: 24px;
+  gap: 4px;
+  margin: 10px 0;
 }
 
 .heatmap-cell {
-  width: 50%;
-  aspect-ratio: 1;
-  border-radius: 3px;
-  cursor: pointer;
-  position: relative;
+  width: 24px;
+  height: 24px;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+  border-radius: 4px;
 }
 
 .heatmap-cell:hover::after {
   content: attr(data-tip);
   position: absolute;
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--text-primary);
   color: var(--bg-panel);
   font-size: 10px;
-  padding: 3px 6px;
+  padding: 4px 7px;
   border-radius: 4px;
   white-space: nowrap;
   z-index: 100;
   pointer-events: none;
 }
 
+/* Heatmap levels */
 .s0 {
   background: var(--bar-bg);
 }
+
 .s1 {
   background: #c7d2fe;
 }
+
 .s2 {
   background: #818cf8;
 }
+
 .s3 {
   background: #4f46e5;
 }
+
 .s4 {
   background: #312e81;
 }
@@ -594,12 +641,15 @@ html::-webkit-scrollbar-thumb {
 [data-theme="dark"] .s1 {
   background: #1e1b4b;
 }
+
 [data-theme="dark"] .s2 {
   background: #3730a3;
 }
+
 [data-theme="dark"] .s3 {
   background: #4f46e5;
 }
+
 [data-theme="dark"] .s4 {
   background: #818cf8;
 }
@@ -618,6 +668,11 @@ html::-webkit-scrollbar-thumb {
   border-radius: 2px;
 }
 
+
+
+.top-sites{
+  margin-top: 2px;
+}
 /* ═══════════════════════════ ANALYTICS TAB ═══════════════════════════ */
 .analytics-layout {
   display: flex;
@@ -1963,7 +2018,15 @@ input:checked + .slider:before {
     transform: rotate(360deg);
   }
 }
-.website-url{
+
+.tab-label.hidden {
+    display: none;
+}
+
+.tab-btn:hover .tab-label {
+    display: inline;
+}
+.app-title-link{
   text-decoration: none;
   color: var(--text-primary);
 }

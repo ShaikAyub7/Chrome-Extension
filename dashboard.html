@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tab Time Tracker — Dashboard</title>
+    <link rel="icon" href="./images/image.png" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./features.css" />
+    <link rel="stylesheet" href="./dashboard.css" />
+    <script src="./lib/chart.umd.js"></script>
+    <script src="./lib/dayjs.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="dashboard-body">
+    <div class="dash-shell">
+      <header class="dash-header">
+        <div class="dash-brand">
+          <img src="./images/image.png" class="dash-logo" alt="" />
+          <span>Tab Time Tracker</span>
+        </div>
+        <div class="dash-date" id="dashDate"></div>
+      </header>
+
+      <section class="dash-hero">
+        <div class="dash-ring-card">
+          <div class="dash-ring-wrap">
+            <svg width="188" height="188" viewBox="0 0 188 188" id="heroRing">
+              <circle cx="94" cy="94" r="78" fill="none" stroke="var(--bar-bg)" stroke-width="15" />
+              <g id="heroRingArcs"></g>
+            </svg>
+            <div class="dash-ring-center">
+              <div class="dash-ring-time" id="heroTime">0m</div>
+              <div class="dash-ring-sub" id="heroSub">of daily limit</div>
+            </div>
+          </div>
+          <div class="dash-insight" id="dashInsight">—</div>
+          <div class="dash-streak" id="dashStreak"></div>
+        </div>
+
+        <div class="dash-week-card">
+          <div class="dash-card-label">Last 7 days</div>
+          <div class="dash-week-chart-wrap">
+            <canvas id="weekChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="dash-grid">
+        <div class="dash-card">
+          <div class="dash-card-label">Top sites today</div>
+          <div id="dashSiteList" class="dash-site-list"></div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-label">Last 35 days</div>
+          <div class="heatmap-grid" id="dashHeatmap" style="grid-template-columns: repeat(12, 1fr)"></div>
+          <div class="heatmap-legend" style="margin-top: 8px">
+            Less
+            <span class="heatmap-swatch s0"></span>
+            <span class="heatmap-swatch s1"></span>
+            <span class="heatmap-swatch s2"></span>
+            <span class="heatmap-swatch s3"></span>
+            <span class="heatmap-swatch s4"></span>
+            More
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="./dashboard.js"></script>
+  </body>
+</html>

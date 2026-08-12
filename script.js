@@ -26,6 +26,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // TAB SWITCHING
   // ═══════════════════════════════════════════════════════════════════════════
   function setupTabs() {
+    document.getElementById("openDashboard")?.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
+    });
+
     document.querySelectorAll(".tab-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         document
@@ -112,9 +116,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         const urlList = document.getElementById("tabUrls");
-        const legend = document.getElementById("customLegend");
+       
         urlList.innerHTML = "";
-        legend.innerHTML = "";
 
         const domains = Object.keys(filtered);
         const totalDom = document.querySelector(".totalDomains");
@@ -256,20 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
       ],
     });
-    const legend = document.getElementById("customLegend");
-    const tot = data.reduce((a, b) => a + b, 0);
-    labels.forEach((label, i) => {
-      const pct = Math.round((data[i] / tot) * 100);
-      if (pct <= 5) return;
-      const h = Math.floor(data[i] / 60),
-        m = Math.floor(data[i] % 60);
-      const short = label.length > 12 ? label.slice(0, 12) + "..." : label;
-      legend.innerHTML += `<div style="display:flex;flex-direction:column;font-size:1.1rem;font-weight:500">
-        <div style="display:flex;align-items:center;gap:5px">
-          <span style="width:8px;height:8px;background:${colors[i]};border-radius:50%"></span>
-          <span title="${label}">${short}</span></div>
-        <span style="color:var(--text-muted);padding-left:13px">${pct}% - ${h ? h + "h " : ""}${m}m</span></div>`;
-    });
+  
   }
 
   function renderHeatmap() {

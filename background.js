@@ -2,17 +2,16 @@ let activeDomain = null;
 let lastTimestamp = 0;
 let intervalId = null;
 let notifiedToday = null;
-let perSiteNotified = {}; // { domain: dateKey } — prevent repeat notifications
+let perSiteNotified = {};
 
 function todayKey() {
   return new Date().toDateString();
 }
 
-// ─── Core tracking ────────────────────────────────────────────────────────────
 function updateTabRuntime(domain, currentTime) {
   const today = todayKey();
   const elapsed = currentTime - lastTimestamp;
-  if (elapsed <= 0 || elapsed > 60000) return; // ignore gaps > 1 min
+  if (elapsed <= 0 || elapsed > 60000) return;
 
   chrome.storage.local.get(
     [today, "dailyLimitHours", "ignoreList", "siteLimits", "scheduleRule"],
@@ -28,7 +27,6 @@ function updateTabRuntime(domain, currentTime) {
       }
       chrome.storage.local.set({ [today]: tabData });
 
-      // Effective daily limit (respects schedule)
       const limitHours = getEffectiveLimit(
         data.dailyLimitHours || 6,
         data.scheduleRule,
@@ -49,7 +47,6 @@ function updateTabRuntime(domain, currentTime) {
   );
 }
 
-// ─── Effective limit (considers schedule) ─────────────────────────────────────
 function getEffectiveLimit(defaultHours, rule) {
   if (!rule || !rule.start || !rule.end || !rule.limitHours)
     return defaultHours;
@@ -62,7 +59,6 @@ function getEffectiveLimit(defaultHours, rule) {
   return nowMin >= startMin && nowMin < endMin ? rule.limitHours : defaultHours;
 }
 
-// ─── Daily limit notification ─────────────────────────────────────────────────
 function checkDailyLimit(totalMs, limitHours) {
   const today = todayKey();
   const limitMs = limitHours * 3600000;
@@ -77,7 +73,6 @@ function checkDailyLimit(totalMs, limitHours) {
   });
 }
 
-// ─── Per-site limit notification ──────────────────────────────────────────────
 function checkPerSiteLimit(domain, runtimeMs, limits, today) {
   if (!limits[domain]) return;
   const capMs = limits[domain] * 60000;
@@ -93,7 +88,6 @@ function checkPerSiteLimit(domain, runtimeMs, limits, today) {
   });
 }
 
-// ─── Focus / block mode ───────────────────────────────────────────────────────
 function checkFocusBlock(url) {
   try {
     const domain = new URL(url).hostname.replace(/^www\./, "");
@@ -109,7 +103,6 @@ function checkFocusBlock(url) {
       if (blocked.some((b) => domain.includes(b) || b.includes(domain))) {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           if (tabs[0]?.id) {
-            // Send a notification instead of closing (less disruptive)
             chrome.notifications.create(`block_${domain}`, {
               type: "basic",
               iconUrl: "images/image.png",
@@ -117,7 +110,6 @@ function checkFocusBlock(url) {
               message: `${domain} is blocked during your focus session.`,
               priority: 2,
             });
-            // Navigate away from blocked site
             chrome.tabs.update(tabs[0].id, { url: "chrome://newtab/" });
           }
         });
@@ -126,7 +118,6 @@ function checkFocusBlock(url) {
   } catch (_) {}
 }
 
-// ─── Session counting ─────────────────────────────────────────────────────────
 function incrementSession(domain) {
   const today = todayKey();
   chrome.storage.local.get(today, (data) => {
@@ -140,7 +131,6 @@ function incrementSession(domain) {
   });
 }
 
-// ─── Interval tracking ────────────────────────────────────────────────────────
 function startTracking() {
   if (intervalId) clearInterval(intervalId);
   intervalId = setInterval(() => {
@@ -151,7 +141,6 @@ function startTracking() {
   }, 1000);
 }
 
-// ─── Tab events ───────────────────────────────────────────────────────────────
 chrome.tabs.onActivated.addListener((info) => {
   const now = Date.now();
   if (activeDomain) updateTabRuntime(activeDomain, now);
@@ -196,7 +185,6 @@ chrome.tabs.onRemoved.addListener(() => {
   }
 });
 
-// Reset per-site notification cache at midnight
 chrome.alarms.create("midnight", {
   when: getMidnight(),
   periodInMinutes: 1440,
@@ -211,15 +199,19 @@ function getMidnight() {
   return d.getTime();
 }
 
-// Google Calendar: check every 5 min if auto-block enabled
 chrome.alarms.create("calendarCheck", { periodInMinutes: 5 });
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "midnight") { perSiteNotified = {}; return; }
+  if (alarm.name === "midnight") {
+    perSiteNotified = {};
+    return;
+  }
   if (alarm.name !== "calendarCheck") return;
 
-  chrome.storage.local.get("calendarBlockEnabled", ({ calendarBlockEnabled }) => {
-    if (!calendarBlockEnabled) return;
-    // Signal popup to re-check (background can't import ES modules easily)
-    chrome.runtime.sendMessage({ type: "CALENDAR_CHECK" }).catch(() => {});
-  });
+  chrome.storage.local.get(
+    "calendarBlockEnabled",
+    ({ calendarBlockEnabled }) => {
+      if (!calendarBlockEnabled) return;
+      chrome.runtime.sendMessage({ type: "CALENDAR_CHECK" }).catch(() => {});
+    },
+  );
 });

@@ -4,11 +4,14 @@
 
 export const Sync = (() => {
   const SYNC_KEYS = [
-    "dailyLimitHours", "blockSites", "siteLimits",
-    "scheduleRule", "ignoreList", "siteLabels",
+    "dailyLimitHours",
+    "blockSites",
+    "siteLimits",
+    "scheduleRule",
+    "ignoreList",
+    "siteLabels",
   ];
 
-  // ── Cloud Sync via chrome.storage.sync ──────────────────────────────────
   function syncToCloud() {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(SYNC_KEYS, (localData) => {
@@ -25,7 +28,7 @@ export const Sync = (() => {
       chrome.storage.sync.get(SYNC_KEYS, (syncData) => {
         if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
         const toWrite = Object.fromEntries(
-          Object.entries(syncData).filter(([, v]) => v !== undefined)
+          Object.entries(syncData).filter(([, v]) => v !== undefined),
         );
         if (Object.keys(toWrite).length === 0) return resolve(false);
         chrome.storage.local.set(toWrite, () => resolve(true));
@@ -33,7 +36,6 @@ export const Sync = (() => {
     });
   }
 
-  // ── Preset Export ────────────────────────────────────────────────────────
   async function exportPreset() {
     return new Promise((resolve) => {
       chrome.storage.local.get(SYNC_KEYS, (data) => {
@@ -66,7 +68,6 @@ export const Sync = (() => {
     });
   }
 
-  // ── Preset Import ────────────────────────────────────────────────────────
   function importPreset(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -75,7 +76,7 @@ export const Sync = (() => {
           const preset = JSON.parse(e.target.result);
           if (!preset.settings) throw new Error("Invalid preset format");
           const toWrite = Object.fromEntries(
-            Object.entries(preset.settings).filter(([, v]) => v !== undefined)
+            Object.entries(preset.settings).filter(([, v]) => v !== undefined),
           );
           chrome.storage.local.set(toWrite, () => resolve(preset));
         } catch (err) {
@@ -87,7 +88,6 @@ export const Sync = (() => {
     });
   }
 
-  // ── UI Panel ─────────────────────────────────────────────────────────────
   function renderSyncPanel(container) {
     container.innerHTML = `
       <div class="sync-panel">
@@ -138,53 +138,69 @@ export const Sync = (() => {
     const syncStatus = container.querySelector("#syncStatus");
     const presetStatus = container.querySelector("#presetStatus");
 
-    container.querySelector("#syncUpBtn")?.addEventListener("click", async () => {
-      try {
-        await syncToCloud();
-        showStatus(syncStatus, "✓ Settings pushed to cloud!", "success");
-      } catch (e) {
-        showStatus(syncStatus, `✗ Sync failed: ${e.message}`, "error");
-      }
-    });
+    container
+      .querySelector("#syncUpBtn")
+      ?.addEventListener("click", async () => {
+        try {
+          await syncToCloud();
+          showStatus(syncStatus, "✓ Settings pushed to cloud!", "success");
+        } catch (e) {
+          showStatus(syncStatus, `✗ Sync failed: ${e.message}`, "error");
+        }
+      });
 
-    container.querySelector("#syncDownBtn")?.addEventListener("click", async () => {
-      try {
-        const had = await syncFromCloud();
-        showStatus(
-          syncStatus,
-          had ? "✓ Settings pulled from cloud!" : "No cloud data found.",
-          had ? "success" : "warning"
-        );
-        if (had) setTimeout(() => location.reload(), 1500);
-      } catch (e) {
-        showStatus(syncStatus, `✗ Pull failed: ${e.message}`, "error");
-      }
-    });
+    container
+      .querySelector("#syncDownBtn")
+      ?.addEventListener("click", async () => {
+        try {
+          const had = await syncFromCloud();
+          showStatus(
+            syncStatus,
+            had ? "✓ Settings pulled from cloud!" : "No cloud data found.",
+            had ? "success" : "warning",
+          );
+          if (had) setTimeout(() => location.reload(), 1500);
+        } catch (e) {
+          showStatus(syncStatus, `✗ Pull failed: ${e.message}`, "error");
+        }
+      });
 
-    container.querySelector("#exportPresetBtn")?.addEventListener("click", async () => {
-      await exportPreset();
-      showStatus(presetStatus, "✓ Preset exported!", "success");
-    });
+    container
+      .querySelector("#exportPresetBtn")
+      ?.addEventListener("click", async () => {
+        await exportPreset();
+        showStatus(presetStatus, "✓ Preset exported!", "success");
+      });
 
-    container.querySelector("#importPresetBtn")?.addEventListener("click", () => {
-      container.querySelector("#presetFileInput").click();
-    });
+    container
+      .querySelector("#importPresetBtn")
+      ?.addEventListener("click", () => {
+        container.querySelector("#presetFileInput").click();
+      });
 
-    container.querySelector("#presetFileInput")?.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      try {
-        const preset = await importPreset(file);
-        const count = Object.keys(preset.settings).filter(
-          (k) => preset.settings[k] !== undefined
-        ).length;
-        showStatus(presetStatus, `✓ Imported ${count} settings!`, "success");
-        setTimeout(() => location.reload(), 1500);
-      } catch (err) {
-        showStatus(presetStatus, `✗ Import failed: ${err.message}`, "error");
-      }
-    });
+    container
+      .querySelector("#presetFileInput")
+      ?.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          const preset = await importPreset(file);
+          const count = Object.keys(preset.settings).filter(
+            (k) => preset.settings[k] !== undefined,
+          ).length;
+          showStatus(presetStatus, `✓ Imported ${count} settings!`, "success");
+          setTimeout(() => location.reload(), 1500);
+        } catch (err) {
+          showStatus(presetStatus, `✗ Import failed: ${err.message}`, "error");
+        }
+      });
   }
 
-  return { syncToCloud, syncFromCloud, exportPreset, importPreset, renderSyncPanel };
+  return {
+    syncToCloud,
+    syncFromCloud,
+    exportPreset,
+    importPreset,
+    renderSyncPanel,
+  };
 })();

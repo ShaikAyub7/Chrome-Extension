@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   let current = dayjs();
   let chartInstance = null;
 
-  // ─── init ────────────────────────────────────────────────────────────────
   initApp();
 
   function initApp() {
@@ -22,9 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 5000);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // TAB SWITCHING
-  // ═══════════════════════════════════════════════════════════════════════════
   function setupTabs() {
     document.getElementById("openDashboard")?.addEventListener("click", () => {
       chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
@@ -140,7 +136,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           const { runtime = 0, sessions = 1 } = filtered[domain];
           total += runtime;
           const pct = Math.min(Math.round((runtime / limitMs) * 100), 100);
-          const short = domain.length > 28 ? domain.slice(0, 28) + "..." : domain;
+          const short =
+            domain.length > 28 ? domain.slice(0, 28) + "..." : domain;
           urlList.insertAdjacentHTML(
             "beforeend",
             `
@@ -258,7 +255,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
       ],
     });
-   
   }
 
   function renderHeatmap() {
@@ -454,10 +450,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   function setupFocusHandlers() {
     const cursorAlertToggle = document.getElementById("cursorAlertToggle");
     chrome.storage.local.get("cursorAlertEnabled", ({ cursorAlertEnabled }) => {
-      if (cursorAlertToggle) cursorAlertToggle.checked = cursorAlertEnabled !== false;
+      if (cursorAlertToggle)
+        cursorAlertToggle.checked = cursorAlertEnabled !== false;
     });
     cursorAlertToggle?.addEventListener("change", () => {
-      chrome.storage.local.set({ cursorAlertEnabled: cursorAlertToggle.checked });
+      chrome.storage.local.set({
+        cursorAlertEnabled: cursorAlertToggle.checked,
+      });
     });
 
     document.querySelectorAll(".pomo-preset").forEach((btn) => {

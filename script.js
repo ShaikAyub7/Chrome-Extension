@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         const urlList = document.getElementById("tabUrls");
-       
+
         urlList.innerHTML = "";
 
         const domains = Object.keys(filtered);
@@ -141,11 +141,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           const { runtime = 0, sessions = 1 } = filtered[domain];
           total += runtime;
           const pct = Math.min(Math.round((runtime / limitMs) * 100), 100);
-          const short = domain.length > 28 ? domain.slice(0, 28) + "..." : domain;
+          const short =
+            domain.length > 28 ? domain.slice(0, 28) + "..." : domain;
           urlList.insertAdjacentHTML(
             "beforeend",
             `
-          <div class="site-usage-box">
+          <div class="site-usage-box" data-domain="${domain}" data-runtime="${runtime}" data-sessions="${sessions}" data-pct="${pct}">
             <img src="${logoUrl(domain)}" class="site-logo" alt=""
               onerror="this.src='https://unavatar.io/${domain}'"/>
             <div style="flex:1;min-width:0">
@@ -259,7 +260,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
       ],
     });
-  
   }
 
   function renderHeatmap() {
@@ -455,10 +455,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   function setupFocusHandlers() {
     const cursorAlertToggle = document.getElementById("cursorAlertToggle");
     chrome.storage.local.get("cursorAlertEnabled", ({ cursorAlertEnabled }) => {
-      if (cursorAlertToggle) cursorAlertToggle.checked = cursorAlertEnabled !== false;
+      if (cursorAlertToggle)
+        cursorAlertToggle.checked = cursorAlertEnabled !== false;
     });
     cursorAlertToggle?.addEventListener("change", () => {
-      chrome.storage.local.set({ cursorAlertEnabled: cursorAlertToggle.checked });
+      chrome.storage.local.set({
+        cursorAlertEnabled: cursorAlertToggle.checked,
+      });
     });
 
     document.querySelectorAll(".pomo-preset").forEach((btn) => {

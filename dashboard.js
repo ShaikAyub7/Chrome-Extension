@@ -1,11 +1,15 @@
-// ═══════════════════════════════════════════════════════════════════════════
-// dashboard.js — full-page dashboard (opened in its own tab from the popup)
-// ═══════════════════════════════════════════════════════════════════════════
-
 (function () {
   const COLORS = [
-    "#e63946", "#9e0059", "#640d14", "#FF6384", "#36A2EB", "#FFCE56",
-    "#4BC0C0", "#9966FF", "#FF9F40", "#C9CBCF",
+    "#e63946",
+    "#9e0059",
+    "#640d14",
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#4BC0C0",
+    "#9966FF",
+    "#FF9F40",
+    "#C9CBCF",
   ];
 
   const RING_R = 78;
@@ -29,7 +33,8 @@
       .reduce((s, [, v]) => s + (v.runtime || 0), 0);
   }
 
-  document.getElementById("dashDate").textContent = dayjs().format("dddd, MMM D YYYY");
+  document.getElementById("dashDate").textContent =
+    dayjs().format("dddd, MMM D YYYY");
 
   const todayKey = dayjs().format("ddd MMM DD YYYY");
   const week = getLastNDayKeys(7).reverse();
@@ -56,7 +61,9 @@
       const filtered = Object.fromEntries(
         Object.entries(todayData).filter(([d]) => !ignored.includes(d)),
       );
-      const sites = Object.entries(filtered).sort((a, b) => (b[1].runtime || 0) - (a[1].runtime || 0));
+      const sites = Object.entries(filtered).sort(
+        (a, b) => (b[1].runtime || 0) - (a[1].runtime || 0),
+      );
       const total = sites.reduce((s, [, v]) => s + (v.runtime || 0), 0);
 
       renderRing(sites, total, limitMs, limitHours);
@@ -76,7 +83,10 @@
       const frac = limitMs > 0 ? Math.min((v.runtime || 0) / limitMs, 1) : 0;
       const len = frac * RING_CIRC;
       if (len <= 0) return;
-      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const circle = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
       circle.setAttribute("cx", "94");
       circle.setAttribute("cy", "94");
       circle.setAttribute("r", String(RING_R));
@@ -86,14 +96,17 @@
       circle.setAttribute("stroke-dasharray", `${len} ${RING_CIRC - len}`);
       circle.setAttribute("stroke-dashoffset", String(-offset));
       circle.setAttribute("transform", "rotate(-90 94 94)");
-      if (i === top.length - 1 || i === 5) circle.setAttribute("stroke-linecap", "round");
+      if (i === top.length - 1 || i === 5)
+        circle.setAttribute("stroke-linecap", "round");
       g.appendChild(circle);
       offset += len;
     });
 
     document.getElementById("heroTime").textContent = fmtMsShort(total);
-    const pct = limitMs > 0 ? Math.min(Math.round((total / limitMs) * 100), 100) : 0;
-    document.getElementById("heroSub").textContent = `${pct}% of ${limitHours}h limit`;
+    const pct =
+      limitMs > 0 ? Math.min(Math.round((total / limitMs) * 100), 100) : 0;
+    document.getElementById("heroSub").textContent =
+      `${pct}% of ${limitHours}h limit`;
   }
 
   function renderInsight(total, week, data, ignored) {
@@ -160,7 +173,8 @@
   function renderWeekChart(week, data, ignored) {
     const ctx = document.getElementById("weekChart")?.getContext("2d");
     if (!ctx) return;
-    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark";
     const totals = week.map((k) => dayTotal(data[k], ignored));
     new Chart(ctx, {
       type: "bar",
@@ -170,7 +184,11 @@
           {
             data: totals.map((ms) => +(ms / 3600000).toFixed(2)),
             backgroundColor: totals.map((ms, i) =>
-              i === totals.length - 1 ? "#e63946" : (isDark ? "#3f3f46" : "#e4e4e7"),
+              i === totals.length - 1
+                ? "#e63946"
+                : isDark
+                  ? "#3f3f46"
+                  : "#e4e4e7",
             ),
             borderRadius: 4,
           },
@@ -182,9 +200,15 @@
         animation: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { ticks: { color: isDark ? "#a1a1aa" : "#71717a" }, grid: { display: false } },
+          x: {
+            ticks: { color: isDark ? "#a1a1aa" : "#71717a" },
+            grid: { display: false },
+          },
           y: {
-            ticks: { color: isDark ? "#a1a1aa" : "#71717a", callback: (v) => `${v}h` },
+            ticks: {
+              color: isDark ? "#a1a1aa" : "#71717a",
+              callback: (v) => `${v}h`,
+            },
             grid: { color: isDark ? "#27272a" : "#f4f4f5" },
           },
         },
@@ -200,7 +224,15 @@
       .map((k, i) => {
         const ms = totals[i];
         const lv =
-          ms === 0 ? 0 : ms < max * 0.25 ? 1 : ms < max * 0.5 ? 2 : ms < max * 0.75 ? 3 : 4;
+          ms === 0
+            ? 0
+            : ms < max * 0.25
+              ? 1
+              : ms < max * 0.5
+                ? 2
+                : ms < max * 0.75
+                  ? 3
+                  : 4;
         const tip = `${dayjs(k, "ddd MMM DD YYYY").format("MMM D")}: ${fmtMsShort(ms)}`;
         return `<div class="heatmap-cell s${lv}" data-tip="${tip}" title="${tip}"></div>`;
       })

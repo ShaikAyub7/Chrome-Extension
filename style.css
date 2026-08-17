@@ -149,7 +149,9 @@ a:hover {
   justify-content: center;
   cursor: pointer;
   font-size: 1.2rem;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .dashboard-link-btn:hover {
@@ -238,13 +240,14 @@ a:hover {
 .right-panel {
   flex: 1;
   display: flex;
+  max-width: 380px;
   flex-direction: column;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   gap: 12px;
 }
-.top-sites{
+.top-sites {
   background: var(--bg-panel);
   padding: 8px;
   margin-top: 2px;
@@ -414,7 +417,7 @@ a:hover {
   padding: 0px 8px;
   overflow-x: hidden;
 }
-.top-sites-title{
+.top-sites-title {
   padding: 4px;
 }
 
@@ -573,7 +576,7 @@ html::-webkit-scrollbar-thumb {
 
 /* Heatmap */
 .heatmap-card {
-   width: fit-content;
+  width: fit-content;
   min-width: 320px;
   background: var(--bg-panel);
   border: 1px solid var(--border);
@@ -666,9 +669,7 @@ html::-webkit-scrollbar-thumb {
   border-radius: 2px;
 }
 
-
-
-.top-sites{
+.top-sites {
   margin-top: 2px;
 }
 /* ═══════════════════════════ ANALYTICS TAB ═══════════════════════════ */
@@ -2018,13 +2019,457 @@ input:checked + .slider:before {
 }
 
 .tab-label.hidden {
-    display: none;
+  display: none;
 }
 
 .tab-btn:hover .tab-label {
-    display: inline;
+  display: inline;
 }
-.app-title-link{
+.app-title-link {
   text-decoration: none;
   color: var(--text-primary);
+}
+/* =========================================================
+   TAB TIME TRACKER — UI POLISH
+   Keep this block at the END of style.css
+   ========================================================= */
+
+/* ---------- App shell ---------- */
+
+.app-shell {
+  height: auto;
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.app-header {
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--bg-header) 94%, transparent);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 var(--border);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- Header ---------- */
+
+.app-title {
+  gap: 8px;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.app-title .app-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+
+.app-title-link {
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+.app-title-link:hover {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* ---------- Navigation ---------- */
+
+.tab-nav {
+  gap: 2px;
+  padding: 3px;
+  border-radius: 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.tab-btn {
+  min-height: 30px;
+  padding: 6px 11px;
+  border-radius: 8px;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.tab-btn:hover {
+  background: var(--bg-panel);
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--bg-panel);
+  color: var(--accent);
+  box-shadow:
+    0 1px 2px var(--shadow),
+    inset 0 0 0 1px var(--border);
+}
+
+.dashboard-link-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease;
+}
+
+.dashboard-link-btn:hover {
+  transform: translateY(-1px);
+  background: var(--accent-light);
+}
+
+/* ---------- Main content ---------- */
+
+.tab-panel {
+  padding: 14px 18px 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.two-col {
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* ---------- Main panels ---------- */
+
+.panel {
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.domains-panel {
+  flex: 0 0 380px;
+  padding: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.right-panel {
+  padding: 10px;
+  gap: 10px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+/* ---------- Summary card ---------- */
+
+.summary-bar {
+  margin-bottom: 6px;
+}
+
+.heading h3 {
+  font-size: 1.7rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.date-bar {
+  padding: 4px 5px 4px 11px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+#selectedDate {
+  font-size: 1.15rem;
+}
+
+/* ---------- Summary metrics ---------- */
+
+.navigation-bar {
+  padding: 10px 4px 8px;
+  margin-bottom: 2px;
+}
+
+.totalTimeDisplay {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.total-day-heading {
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.daily-limit-progress {
+  gap: 9px;
+}
+
+.circular-chart {
+  width: 56px;
+  height: 56px;
+}
+
+.limit-text {
+  font-size: 1.2rem;
+}
+
+/* ---------- Top sites ---------- */
+
+.top-sites {
+  margin-top: 8px;
+  padding: 10px;
+  width: 350px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.top-sites-title {
+  padding: 2px 2px 8px;
+}
+
+.top-sites-title p {
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+/* ---------- Site cards ---------- */
+
+#tabUrls {
+  height: 260px;
+  padding: 0 2px;
+}
+
+.site-usage-box {
+  position: relative;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 7px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: var(--bg-card);
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.site-usage-box:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: color-mix(in srgb, var(--bg-card) 94%, var(--accent) 6%);
+}
+
+.site-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  padding: 3px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+}
+
+.site-domain a {
+  font-size: 1.3rem;
+  font-weight: 650;
+}
+
+.site-duration {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.site-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bar-bg);
+}
+
+.site-bar-fill {
+  border-radius: 999px;
+}
+
+.site-row-bottom {
+  margin-top: 1px;
+}
+
+/* ---------- Bottom bar ---------- */
+
+.bottom-bar {
+  margin-top: 8px;
+  padding: 2px 2px 0;
+}
+
+.totalDomains {
+  font-size: 1.2rem;
+}
+
+.delete-data {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  transition:
+    transform 0.16s ease,
+    opacity 0.16s ease;
+}
+
+.delete-data:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* ---------- Doughnut chart ---------- */
+
+.graph-container {
+  min-height: 260px;
+  padding: 14px;
+  border-radius: 15px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#myChart {
+  width: 220px !important;
+  height: 220px !important;
+  max-width: 220px;
+  max-height: 220px;
+}
+
+/* custom legend is no longer used */
+#customLegend {
+  display: none !important;
+}
+
+/* ---------- Streak ---------- */
+
+.streak-bar {
+  margin: 0;
+  padding: 8px 10px;
+  min-height: 38px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.streak-badge {
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+.goal-status {
+  padding: 4px 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* ---------- Heatmap ---------- */
+
+.heatmap-card {
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+
+.heatmap-card .card-label {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.heatmap-grid {
+  width: max-content;
+  grid-template-columns: repeat(12, 24px);
+  grid-auto-rows: 24px;
+  gap: 4px;
+  margin: 8px 0 10px;
+}
+
+.heatmap-cell {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  transition:
+    transform 0.14s ease,
+    filter 0.14s ease;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.12);
+  filter: brightness(1.12);
+  z-index: 2;
+}
+
+.heatmap-legend {
+  gap: 4px;
+  font-size: 1rem;
+}
+
+.heatmap-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+}
+
+/* ---------- Better scrollbar ---------- */
+
+#tabUrls::-webkit-scrollbar,
+#siteLabels::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  width: 5px;
+}
+
+#tabUrls::-webkit-scrollbar-track,
+#siteLabels::-webkit-scrollbar-track,
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#tabUrls::-webkit-scrollbar-thumb,
+#siteLabels::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+#tabUrls::-webkit-scrollbar-thumb:hover,
+#siteLabels::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ---------- General polish ---------- */
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Light theme refinement ---------- */
+
+:root {
+  --shadow: rgba(0, 0, 0, 0.045);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Dark theme refinement ---------- */
+
+[data-theme="dark"] {
+  --shadow: rgba(0, 0, 0, 0.22);
+  --shadow-md: rgba(0, 0, 0, 0.38);
 }

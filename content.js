@@ -45,9 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // THEME
-  // ═══════════════════════════════════════════════════════════════════════════
   function setupTheme() {
     const toggle = document.getElementById("toggleTheme");
     chrome.storage.local.get("theme", ({ theme }) => {
@@ -61,10 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       chrome.storage.local.set({ theme: dark ? "dark" : "light" });
     });
   }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SUMMARY
-  // ═══════════════════════════════════════════════════════════════════════════
 
   function setupCalendar() {
     document
@@ -313,9 +306,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // ANALYTICS
-  // ═══════════════════════════════════════════════════════════════════════════
   let analyticsPeriod = 7,
     analyticsChart = null;
 
@@ -439,9 +429,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="prod-bar-row"><span class="prod-bar-label">Distracting</span><div class="prod-bar-track"><div class="prod-bar-fill distracting" style="width:${pctD}%"></div></div><span class="prod-bar-pct">${pctD}%</span></div>`;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // FOCUS
-  // ═══════════════════════════════════════════════════════════════════════════
   let pomoMin = 25,
     pomoSec = 0,
     pomoInterval = null,
@@ -664,9 +651,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // SETTINGS
-  // ═══════════════════════════════════════════════════════════════════════════
   function setupSettingsHandlers() {
     document.getElementById("addIgnore")?.addEventListener("click", () => {
       const inp = document.getElementById("ignoreInput");
@@ -774,9 +758,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // EXPORT
-  // ═══════════════════════════════════════════════════════════════════════════
   function setupExport() {
     document.getElementById("exportCSV")?.addEventListener("click", () => {
       const keys = getLastNDayKeys(90).reverse();
@@ -822,7 +803,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     a.click();
   }
 
-  // ─── Helpers ────────────────────────────────────────────────────────────────
   const COLORS = [
     "#e63946",
     "#9e0059",

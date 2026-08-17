@@ -1,4 +1,3 @@
-/* ── Drag handle (only this element is draggable, not the whole row) ──────── */
 .drag-handle {
   display: inline-flex;
   align-items: center;

@@ -12,7 +12,6 @@ body {
   font-size: 62.5%;
 }
 
-/* ═══════════════════════════ THEME VARIABLES ═══════════════════════════ */
 :root {
   --bg-main: #f4f4f5;
   --bg-panel: #ffffff;
@@ -65,7 +64,6 @@ body {
   --shadow-md: rgba(0, 0, 0, 0.5);
 }
 
-/* ═══════════════════════════ BASE ═══════════════════════════ */
 body {
   font-family: "Inter", sans-serif;
   font-size: 1.4rem;
@@ -88,7 +86,6 @@ a:hover {
   opacity: 0.8;
 }
 
-/* ═══════════════════════════ APP SHELL ═══════════════════════════ */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -106,7 +103,6 @@ a:hover {
   color: var(--text-secondary);
   margin: 8px 10px;
 }
-/* ═══════════════════════════ HEADER & TABS ═══════════════════════════ */
 .app-header {
   display: flex;
   align-items: center;
@@ -170,7 +166,7 @@ a:hover {
 
 .tab-btn {
   padding: 6px 12px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 500;
   border: none;
   background: none;
@@ -179,6 +175,7 @@ a:hover {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   transition:
     background 0.15s,
@@ -195,7 +192,6 @@ a:hover {
   box-shadow: 0 1px 3px var(--shadow);
 }
 
-/* ═══════════════════════════ PANELS ═══════════════════════════ */
 .tab-panel {
   padding: 12px 24px;
 }
@@ -229,7 +225,6 @@ a:hover {
   margin-top: -6px;
 }
 
-/* ═══════════════════════════ SUMMARY TAB ═══════════════════════════ */
 .domains-panel {
   flex: 0 0 340px;
   gap: 3px;
@@ -672,7 +667,7 @@ html::-webkit-scrollbar-thumb {
 .top-sites {
   margin-top: 2px;
 }
-/* ═══════════════════════════ ANALYTICS TAB ═══════════════════════════ */
+
 .analytics-layout {
   display: flex;
   flex-direction: column;
@@ -821,7 +816,6 @@ html::-webkit-scrollbar-thumb {
   font-size: 1.1rem;
 }
 
-/* ═══════════════════════════ FOCUS TAB ═══════════════════════════ */
 .pomodoro-box {
   text-align: center;
   padding: 12px 0;
@@ -885,7 +879,6 @@ html::-webkit-scrollbar-thumb {
   color: var(--success);
 }
 
-/* Per-site limit list */
 .site-limit-list {
   list-style: none;
   margin-top: 8px;
@@ -920,7 +913,6 @@ html::-webkit-scrollbar-thumb {
   color: var(--warning);
 }
 
-/* Schedule */
 .schedule-box {
   display: flex;
   flex-direction: column;
@@ -946,7 +938,6 @@ html::-webkit-scrollbar-thumb {
   min-height: 18px;
 }
 
-/* ═══════════════════════════ SETTINGS TAB ═══════════════════════════ */
 .settings-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1026,7 +1017,6 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--accent);
 }
 
-/* Tag list (ignore / block sites) */
 .tag-list {
   list-style: none;
   display: flex;
@@ -1096,15 +1086,11 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-/* Export */
 .export-btns {
   display: flex;
   gap: 8px;
 }
 
-/* ═══════════════════════════ SHARED COMPONENTS ═══════════════════════════ */
-
-/* Inputs */
 .text-input {
   flex: 1;
   padding: 7px 10px;
@@ -1133,7 +1119,6 @@ input[type="range"]::-webkit-slider-thumb {
   align-items: center;
 }
 
-/* Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -1261,7 +1246,6 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
-/* Calendar wrapper */
 .calendar-wrapper {
   position: relative;
   display: inline-block;
@@ -1292,7 +1276,6 @@ input:checked + .slider:before {
   pointer-events: none;
 }
 
-/* Alert */
 .alert {
   position: fixed;
   top: 65px;
@@ -1309,7 +1292,6 @@ input:checked + .slider:before {
   white-space: nowrap;
 }
 
-/* Version */
 .version {
   position: fixed;
   bottom: 6px;
@@ -1322,7 +1304,6 @@ input:checked + .slider:before {
   color: var(--danger) !important;
 }
 
-/* ═══════════════════════════ AUTH SCREEN ═══════════════════════════ */
 .auth-screen {
   min-width: 400px;
   min-height: 480px;
@@ -1502,7 +1483,6 @@ input:checked + .slider:before {
   background: var(--border);
 }
 
-/* User badge in header */
 .user-badge {
   display: flex;
   align-items: center;
@@ -1529,7 +1509,6 @@ input:checked + .slider:before {
   padding: 2px;
 }
 
-/* Auth-required overlay */
 .auth-required-overlay {
   position: absolute;
   inset: 0;
@@ -1558,7 +1537,6 @@ input:checked + .slider:before {
   line-height: 1.5;
 }
 
-/* Sync status */
 .sync-status {
   font-size: 1.1rem;
   font-weight: 500;
@@ -1573,8 +1551,6 @@ input:checked + .slider:before {
 .app-shell {
   position: relative;
 }
-
-/* ═══════════════════════════ AI TAB ═══════════════════════════ */
 
 .ai-messages {
   background: var(--bg-panel);
@@ -1687,7 +1663,6 @@ input:checked + .slider:before {
   flex: 1;
 }
 
-/* AI badge on tab button */
 .ai-tab-btn {
   position: relative;
 }
@@ -1707,10 +1682,9 @@ input:checked + .slider:before {
   justify-content: center;
 }
 
-/* The tab panel itself — fixed height, no overflow */
 #tab-ai {
   padding: 12px 16px;
-  height: calc(100vh - 52px); /* fill below header */
+  height: calc(100vh - 52px);
   max-height: 480px;
   display: flex;
   flex-direction: column;
@@ -1720,7 +1694,6 @@ input:checked + .slider:before {
   display: none !important;
 }
 
-/* Outer wrapper fills all available space */
 .ai-chat-wrap {
   display: flex;
   flex-direction: column;
@@ -1731,7 +1704,6 @@ input:checked + .slider:before {
   border-radius: 16px;
 }
 
-/* ── Header ── */
 .ai-chat-header {
   display: flex;
   align-items: center;
@@ -1796,7 +1768,6 @@ input:checked + .slider:before {
   height: 100%;
 }
 
-/* ── Messages ── */
 .ai-messages {
   flex: 1;
   overflow-y: scroll;
@@ -1805,7 +1776,7 @@ input:checked + .slider:before {
   flex-direction: column;
   gap: 8px;
   background: var(--bg-panel);
-  min-height: 0; /* critical for flex child scrolling */
+  min-height: 0;
 }
 .ai-messages::-webkit-scrollbar {
   width: 4px;
@@ -1858,7 +1829,6 @@ input:checked + .slider:before {
   border-bottom-right-radius: 4px;
 }
 
-/* Suggestion chips */
 .ai-suggestion {
   display: inline-block;
   margin: 4px 3px 0 0;
@@ -1876,7 +1846,6 @@ input:checked + .slider:before {
   color: #fff;
 }
 
-/* Typing dots */
 .ai-typing {
   display: flex;
   gap: 4px;
@@ -1907,7 +1876,6 @@ input:checked + .slider:before {
   }
 }
 
-/* ── Input bar ── */
 .ai-input-bar {
   display: flex;
   gap: 6px;
@@ -1957,7 +1925,6 @@ input:checked + .slider:before {
   transform: scale(0.92);
 }
 
-/* ── API key strip ── */
 .ai-key-strip {
   display: flex;
   align-items: center;
@@ -2001,7 +1968,6 @@ input:checked + .slider:before {
   opacity: 0.85;
 }
 
-/* Spinner */
 .ai-spinner {
   width: 14px;
   height: 14px;
@@ -2029,12 +1995,6 @@ input:checked + .slider:before {
   text-decoration: none;
   color: var(--text-primary);
 }
-/* =========================================================
-   TAB TIME TRACKER — UI POLISH
-   Keep this block at the END of style.css
-   ========================================================= */
-
-/* ---------- App shell ---------- */
 
 .app-shell {
   height: auto;
@@ -2049,8 +2009,6 @@ input:checked + .slider:before {
   box-shadow: 0 1px 0 var(--border);
   backdrop-filter: blur(12px);
 }
-
-/* ---------- Header ---------- */
 
 .app-title {
   gap: 8px;
@@ -2073,8 +2031,6 @@ input:checked + .slider:before {
   color: var(--accent);
   opacity: 1;
 }
-
-/* ---------- Navigation ---------- */
 
 .tab-nav {
   gap: 2px;
@@ -2122,8 +2078,6 @@ input:checked + .slider:before {
   background: var(--accent-light);
 }
 
-/* ---------- Main content ---------- */
-
 .tab-panel {
   padding: 14px 18px 18px;
   display: flex;
@@ -2134,8 +2088,6 @@ input:checked + .slider:before {
   gap: 14px;
   align-items: stretch;
 }
-
-/* ---------- Main panels ---------- */
 
 .panel {
   border-radius: 16px;
@@ -2155,8 +2107,6 @@ input:checked + .slider:before {
   gap: 10px;
   box-shadow: 0 8px 24px var(--shadow);
 }
-
-/* ---------- Summary card ---------- */
 
 .summary-bar {
   margin-bottom: 6px;
@@ -2178,8 +2128,6 @@ input:checked + .slider:before {
 #selectedDate {
   font-size: 1.15rem;
 }
-
-/* ---------- Summary metrics ---------- */
 
 .navigation-bar {
   padding: 10px 4px 8px;
@@ -2210,8 +2158,6 @@ input:checked + .slider:before {
   font-size: 1.2rem;
 }
 
-/* ---------- Top sites ---------- */
-
 .top-sites {
   margin-top: 8px;
   padding: 10px;
@@ -2230,8 +2176,6 @@ input:checked + .slider:before {
   font-weight: 650;
   color: var(--text-primary);
 }
-
-/* ---------- Site cards ---------- */
 
 #tabUrls {
   height: 260px;
@@ -2291,8 +2235,6 @@ input:checked + .slider:before {
   margin-top: 1px;
 }
 
-/* ---------- Bottom bar ---------- */
-
 .bottom-bar {
   margin-top: 8px;
   padding: 2px 2px 0;
@@ -2320,8 +2262,6 @@ input:checked + .slider:before {
   opacity: 0.9;
 }
 
-/* ---------- Doughnut chart ---------- */
-
 .graph-container {
   min-height: 260px;
   padding: 14px;
@@ -2341,12 +2281,9 @@ input:checked + .slider:before {
   max-height: 220px;
 }
 
-/* custom legend is no longer used */
 #customLegend {
   display: none !important;
 }
-
-/* ---------- Streak ---------- */
 
 .streak-bar {
   margin: 0;
@@ -2367,8 +2304,6 @@ input:checked + .slider:before {
   font-size: 1.05rem;
   font-weight: 600;
 }
-
-/* ---------- Heatmap ---------- */
 
 .heatmap-card {
   width: 100%;
@@ -2419,8 +2354,6 @@ input:checked + .slider:before {
   border-radius: 3px;
 }
 
-/* ---------- Better scrollbar ---------- */
-
 #tabUrls::-webkit-scrollbar,
 #siteLabels::-webkit-scrollbar,
 html::-webkit-scrollbar {
@@ -2446,8 +2379,6 @@ html::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 
-/* ---------- General polish ---------- */
-
 button {
   -webkit-tap-highlight-color: transparent;
 }
@@ -2460,14 +2391,10 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* ---------- Light theme refinement ---------- */
-
 :root {
   --shadow: rgba(0, 0, 0, 0.045);
   --shadow-md: rgba(0, 0, 0, 0.1);
 }
-
-/* ---------- Dark theme refinement ---------- */
 
 [data-theme="dark"] {
   --shadow: rgba(0, 0, 0, 0.22);
